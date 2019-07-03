@@ -5,7 +5,7 @@ import theme from '../src/theme'
 
 export default {
   publicPath: 'https://doublechain.oss-cn-hangzhou.aliyuncs.com/mobileweb/dist/',
-  base: '/mobile/',
+  base: '/editor/',
   // history: 'hash',
   // add for transfer to umi
   plugins: [
