@@ -54,7 +54,11 @@ const createDefault = namespace => ({
   reducers: {
     save(state, { payload }) {
       const result = save(state, payload, namespace)
+      console.log('doooooo, model save')
       return { ...state, ...result }
+    },
+    saveToStore(state, { payload }) {
+      return { ...state, ...payload }
     },
   },
 })

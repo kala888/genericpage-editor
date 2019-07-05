@@ -4,7 +4,7 @@ import { Button, Tabs } from 'antd'
 import { connect } from 'dva'
 import { createForm } from 'rc-form'
 import styled from 'styled-components'
-import SliderEditor from '../common/slider-editor'
+import SliderEditor from './common/slider-editor'
 
 const { TabPane } = Tabs
 
@@ -18,6 +18,10 @@ const Container = styled.div`
 `
 const Title = styled.div`
   padding-bottom: 10px;
+`
+const Brief = styled.div`
+  margin-left: 20px;
+  font-size: 12px;
 `
 
 const Content = styled.div`
@@ -57,20 +61,24 @@ class PropsEditor extends PureComponent {
 
     const { title = '组件', id, propList = [] } = ele
 
-    console.log('12312312313', ele)
+    console.log('props editor render', ele)
 
     return (
       <Container>
         <Title>
           {title}
-          {id}
+          <Brief>
+            组件ID：
+            {id}
+          </Brief>
         </Title>
+
         <Content>
-          <Tabs defaultActiveKey="2">
-            <TabPane tab="基本信息" key="1">
-              Tab 1
+          <Tabs defaultActiveKey="style-tabs">
+            <TabPane tab="基本信息" key="base-info">
+              基本信息，没想好放啥
             </TabPane>
-            <TabPane tab="样式编辑" key="2">
+            <TabPane tab="样式编辑" key="style-tabs">
               {propList.map(it => {
                 console.log('slider', it)
                 const defaultValue = ele[it.name] || it.defaultValue

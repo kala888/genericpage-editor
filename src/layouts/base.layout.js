@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import NProgress from 'nprogress'
 import withRouter from 'umi/withRouter'
 import { connect } from 'dva'
-import WechatTools from '../utils/wechat-tools'
 
 NProgress.configure({ showSpinner: false })
 
@@ -11,7 +10,7 @@ let currHref = ''
 
 class BasicLayout extends PureComponent {
   componentDidMount() {
-    WechatTools.registryThisPage()
+    // WechatTools.registryThisPage()
   }
 
   render() {

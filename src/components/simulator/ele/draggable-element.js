@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Modal } from 'antd'
+import { Icon, Modal } from 'antd'
 import { connect } from 'dva'
 import { Draggable } from 'react-beautiful-dnd'
 import NavigationService from '../../../nice-router/navigation.service'
@@ -14,12 +14,12 @@ const Container = styled.div`
   user-select: none;
   position: relative;
   padding: ${({ isDragging }) => (isDragging ? '0.05rem' : 0)};
-  border: ${({ isDragging, isEditing }) => {
+  border: ${({ isDragging, isEditing, dashedEditing }) => {
     if (isDragging) {
       return '1px dashed #000'
     }
-    if (isEditing) {
-      return '1px dashed blue'
+    if (isEditing && dashedEditing) {
+      return '2px dashed deepskyblue'
     }
     return 'inherit'
   }};
@@ -28,13 +28,15 @@ const Container = styled.div`
 const Options = styled.div`
   position: absolute;
   top: 5px;
-  right: 20px;
-  display: ${({ isEditing }) => (isEditing ? 'inherit' : 'none')};
+  right: 10px;
+  display: ${({ isEditing }) => (isEditing ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
 `
 
 const OptionAction = styled.div`
-  padding: 2px 10px;
-  font-size: 15px;
+  padding: 2px 8px;
+  font-size: 12px;
   border: 1px dashed deepskyblue;
 `
 
@@ -46,7 +48,7 @@ const OptionAction = styled.div`
  * this.props.element dva store 产生的数据
  */
 @connect(({ element }) => ({ element }))
-class DraggableElement extends React.Component {
+class DraggableElement extends React.PureComponent {
   //
   // shouldComponentUpdate(nextProps) {
   //   const { item = {} } = this.props
@@ -83,7 +85,7 @@ class DraggableElement extends React.Component {
   render() {
     const { item = {}, index, element = {} } = this.props
     const { id } = item
-    const { editingId } = element
+    const { editingId, dashedEditing } = element
 
     const ele = element[id] || item
 
@@ -100,10 +102,12 @@ class DraggableElement extends React.Component {
             style={provided.draggableProps.style}
             isEditing={isEditing}
             onClick={this.handleClick}
+            dashedEditing={dashedEditing}
           >
             <Element {...ele} />
             <Options isEditing={isEditing}>
               <OptionAction onClick={this.handleRemove}>删除</OptionAction>
+              <Icon style={{ marginLeft: '5px' }} type="setting" spin />
             </Options>
           </Container>
         )}

@@ -2,65 +2,59 @@ import React from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
 import { connect } from 'dva'
-
-import { Button } from 'antd'
-import ElementMenu from '../components/simulator/menu/element-menu'
 import SimulatorContainer from '../components/simulator/simulator-container'
-import PropsEditor from '../components/simulator/props/props-editor'
+import PropsEditor from '../components/simulator/props-editor'
 import NavigationService from '../nice-router/navigation.service'
-import Trash from '../components/simulator/trash'
+import PageOption from '../components/simulator/page-option'
+import MenuPane from '../components/simulator/menu/menu-pane'
+import Config from '../utils/config'
 
 const Page = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 1000px;
-  background-color: #f4f4f4;
+  padding: 40px 80px;
+  background-color: #fff;
 `
 
 const Pane = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid gainsboro;
   padding: 10px;
+  background-color: #fbfbfb;
 `
 
-const LeftPane = styled(Pane)`
-  width: 400px;
-`
-
-const RightPane = styled(Pane)`
+const Right = styled(Pane)`
   width: 600px;
   padding-bottom: 200px;
 `
 
-const Content = styled(Pane)`
+const Body = styled(Pane)`
   flex: 1;
   flex-direction: row;
   alignitems: 'flex-end';
   justify-content: center;
+  border-left: 2px solid #eee;
+  border-right: 2px solid #eee;
 `
-// const Content = styled.div`
-//   position:absolute;
-// `
-
-const ScaleOption = styled.div`
-  align-self: center;
-  padding: 10px 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
+const Left = styled(Pane)`
+  width: 450px;
 `
 
 @connect(({ simulator }) => ({ ...simulator }))
 class SimulatorPage extends React.PureComponent {
+  componentDidMount() {
+    console.log(Config.api.FooterHome)
+    // NavigationService.ajax(Config.api.FooterHome)
+  }
+
   handleScale = (decrease = false) => {
-    NavigationService.navigate('simulator/scale', { decrease })
+    NavigationService.dispatch('simulator/scale', { decrease })
   }
 
   handleResetScale = () => {
-    NavigationService.navigate('simulator/resetScale')
+    NavigationService.dispatch('simulator/resetScale')
   }
 
   onDragUpdate = result => {
@@ -95,7 +89,7 @@ class SimulatorPage extends React.PureComponent {
       return
     }
 
-    if (dragFrom === 'menu-items' && dragTo === 'screen') {
+    if (dragFrom.indexOf('menu-items') > -1 && dragTo === 'screen') {
       // 从侧栏拖元素到simulator的screen
       NavigationService.dispatch('simulator/dragToScreen', payload)
       return
@@ -107,38 +101,22 @@ class SimulatorPage extends React.PureComponent {
   }
 
   render() {
-    const { scaleValues, scaleIndex, elementMenuList, screen } = this.props
-    const scale = scaleValues[scaleIndex] / 100
-
-    console.log('1231231', this.props)
-
+    const { scaleValues, scaleIndex, menuGroups, screen } = this.props
+    const scaleValue = scaleValues[scaleIndex]
+    const scale = scaleValue / 100
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Page>
-          <LeftPane>
-            <ScaleOption>
-              <div size="small">{scaleValues[scaleIndex]}%</div>
-              <Button size="small" onClick={() => this.handleScale(false)}>
-                放大
-              </Button>
-              <Button size="small" onClick={() => this.handleScale(true)}>
-                缩小
-              </Button>
-              <Button size="small" onClick={this.handleResetScale}>
-                重置大小
-              </Button>
-            </ScaleOption>
-            <ElementMenu menuList={elementMenuList} />
-          </LeftPane>
-
-          <Content>
+          <Left>
+            <MenuPane scaleValue={scaleValue} menuGroups={menuGroups} />
+          </Left>
+          <Body>
             <SimulatorContainer scale={scale} list={screen} />
-            <Trash />
-          </Content>
-
-          <RightPane>
+            <PageOption />
+          </Body>
+          <Right>
             <PropsEditor list={screen} />
-          </RightPane>
+          </Right>
         </Page>
       </DragDropContext>
     )

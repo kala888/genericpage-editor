@@ -5,9 +5,13 @@ import styled from 'styled-components'
 import EleCarousel from './ele-carousel'
 import NavigationService from '../../../nice-router/navigation.service'
 
-const BaseWrapper = styled.div`
+const Container = styled.div`
   width: 100%;
-  height: 80px;
+`
+
+const Unexcepted = styled.div`
+  width: 100%;
+  height: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,42 +20,17 @@ const BaseWrapper = styled.div`
   font-size: 40px;
   box-sizing: border-box;
 `
-const OtherWrapper = styled(BaseWrapper)`
-  height: 200px;
-  padding: 10px;
-  background-color: firebrick;
-  border-radius: 10px;
-`
-
-function StoreLocation({ title }) {
-  return <BaseWrapper>{title}</BaseWrapper>
-}
-
-function Others(item) {
-  return (
-    <OtherWrapper>
-      {item.title}
-      <div style={{ fontSize: '20px', wordBreak: 'break-all' }}> {JSON.stringify(item)}</div>
-    </OtherWrapper>
-  )
-}
-
-const RegistryElements = ['store-location', 'carousel']
+const RegistryElements = ['carousel']
 
 function getComponentType(componentType) {
   return _.findIndex(RegistryElements, it => it === componentType) > -1 ? componentType : 'others'
 }
 
-class Element extends React.PureComponent {
-  //
-  // shouldComponentUpdate(nextProps) {
-  //   const { item = {} } = this.props
-  //
-  //   if (item.id !== nextProps.element.id) {
-  //     return true
-  //   }
-  //   return false
-  // }
+class Element extends React.Component {
+  static defaultProps = {
+    marginVertical: 0,
+    marginHorizontal: 0,
+  }
 
   handleClick = () => {
     console.log('Element-Click', this.props)
@@ -63,17 +42,12 @@ class Element extends React.PureComponent {
     const { componentType } = this.props
     const type = getComponentType(componentType)
     console.log('render Element', this.props)
-
+    const { marginVertical, marginHorizontal } = this.props
     return (
-      <React.Fragment>
-        {type === 'store-location' && <StoreLocation {...this.props} />}
+      <Container style={{ margin: `${marginVertical}px ${marginHorizontal}px` }}>
         {type === 'carousel' && <EleCarousel {...this.props} />}
-        {type === 'others' && (
-          <div style={{ margin: '10px' }}>
-            <Others {...this.props} />
-          </div>
-        )}
-      </React.Fragment>
+        {type === 'others' && <Unexcepted>{this.props.title}</Unexcepted>}
+      </Container>
     )
   }
 }

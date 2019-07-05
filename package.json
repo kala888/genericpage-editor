@@ -17,6 +17,7 @@
     "prettier": "prettier --write ./src/**/**/**/*"
   },
   "dependencies": {
+    "antd": "^3.20.0",
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",
     "blueimp-md5": "^2.10.0",

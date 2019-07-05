@@ -14,10 +14,10 @@ const reorder = (list, startIndex, endIndex) => {
 const copy = (source, destination, droppableSource, droppableDestination) => {
   const sourceClone = Array.from(source)
   const destClone = Array.from(destination)
-  const item = sourceClone[droppableSource.index]
+  const item = { ...sourceClone[droppableSource.index], id: uuid() }
 
-  destClone.splice(droppableDestination.index, 0, { ...item, id: uuid() })
-  return destClone
+  destClone.splice(droppableDestination.index, 0, item)
+  return { list: destClone, item }
 }
 
 const move = (source, destination, droppableSource, droppableDestination) => {

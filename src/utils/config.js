@@ -1,6 +1,7 @@
 import ViewMapping from './viewmapping.config'
 
-const baseURL = 'https://www.biubiuguai.com/mobile-testing/'
+// const baseURL = 'https://www.biubiuguai.com/mobile-testing/'
+const baseURL = 'https://demo.doublechaintech.com/tao/'
 
 const niceRouterConfig = {
   baseURL,
@@ -14,7 +15,7 @@ const niceRouterConfig = {
   backendRouterPageBlackList: ['NetworkException', 'EditProfileForm', 'Login', 'Me', 'UserDetail'],
   api: {
     VerifyCode: '',
-    FooterHome:'viewHomePage/'
+    FooterHome: 'projectManager/view/P000001/',
   },
 }
 

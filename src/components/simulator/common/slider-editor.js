@@ -1,29 +1,27 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Col, InputNumber, Row, Slider } from 'antd'
-import _ from 'lodash'
 import NavigationService from '../../../nice-router/navigation.service'
 
-class SliderEditor extends Component {
+class SliderEditor extends React.Component {
   state = {
     inputValue: null,
   }
 
-  updateProps = _.throttle(inputValue => {
+  updateProps = inputValue => {
     const { name, componentId } = this.props
     NavigationService.dispatch('element/updateProp', {
       id: componentId,
       [name]: inputValue,
     })
-  }, 200)
+  }
 
   onChange = inputValue => {
-    const { name, form } = this.props
     this.setState(
       {
         inputValue,
       },
       () => {
-        form.setFieldsValue({ [name]: inputValue })
+        // form.setFieldsValue({ [name]: inputValue })
         this.updateProps(inputValue)
       }
     )
