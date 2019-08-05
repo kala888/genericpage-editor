@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import styled from 'styled-components'
+import _ from 'lodash'
 import NavigationService from '../../../nice-router/navigation.service'
 import Config from '../../../utils/config'
 
@@ -37,10 +38,6 @@ class MenuPageItem extends React.PureComponent {
     NavigationService.view('simulator/editPage', {})
   }
 
-  openPageInEditor = () => {
-    NavigationService.ajax(Config.api.ViewPage, this.props.page)
-  }
-
   handleCopyPage = () => {
     const { page: { id, project = {} } = {} } = this.props
     NavigationService.ajax(Config.api.CopyPage, {
@@ -61,11 +58,38 @@ class MenuPageItem extends React.PureComponent {
     })
   }
 
+  handleClick = e => {
+    if (!this.delayedClick) {
+      this.delayedClick = _.debounce(this.doClick, 500)
+    }
+    if (this.clickedOnce) {
+      this.delayedClick.cancel()
+      this.clickedOnce = false
+      console.log('double click')
+      const { onItemDoubleClick } = this.props
+      NavigationService.ajax(Config.api.ViewPage, this.props.page, {
+        onSuccess: () => {
+          if (onItemDoubleClick) {
+            onItemDoubleClick()
+          }
+        },
+      })
+    } else {
+      this.delayedClick(e)
+      this.clickedOnce = true
+    }
+  }
+
+  doClick = () => {
+    this.clickedOnce = undefined
+    NavigationService.ajax(Config.api.ViewPage, this.props.page)
+  }
+
   render() {
     const { page: { title } = {}, isEditing = false } = this.props
 
     return (
-      <Container onClick={this.openPageInEditor} isEditing={isEditing}>
+      <Container onClick={this.handleClick} isEditing={isEditing}>
         <Title>{title}</Title>
         <Options className="option">
           <Button size="small" shape="circle" icon="setting" onClick={this.openEditPagePopup} />

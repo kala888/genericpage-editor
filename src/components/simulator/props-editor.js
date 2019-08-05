@@ -4,7 +4,8 @@ import { Button, Tabs } from 'antd'
 import { connect } from 'dva'
 import { createForm } from 'rc-form'
 import styled from 'styled-components'
-import SliderEditor from './common/slider-editor'
+import InputNumberEditor from './common/input-number-editor'
+import EditorHelper from './editor-helper'
 
 const { TabPane } = Tabs
 
@@ -46,7 +47,14 @@ class PropsEditor extends PureComponent {
   handleUpdate = () => {
     this.props.form.validateFields(async (error, values) => {
       const { item = {} } = this.props
-      console.log('commit to', { ...item, ...values })
+
+      const params = {}
+      // eslint-disable-next-line array-callback-return
+      _.keys(values).map(it => {
+        params[EditorHelper.getPropertyName(it)] = values[it]
+      })
+
+      console.log('commit to', { ...item, ...params })
     })
     // NavigationService.dispatch('propsEditor/commit', this.props)
   }
@@ -82,15 +90,16 @@ class PropsEditor extends PureComponent {
               {propList.map(it => {
                 console.log('slider', it)
                 const defaultValue = ele[it.name] || it.defaultValue
-                return (
-                  <SliderEditor
-                    key={it.id + id}
-                    {...it}
-                    defaultValue={defaultValue}
-                    componentId={id}
-                    form={form}
-                  />
-                )
+                const key = `${it.id}:${id}`
+                const itemProps = {
+                  ...it,
+                  defaultValue,
+                  componentId: id,
+                  form,
+                  key,
+                }
+                console.log('ekkkkkkk', key)
+                return <InputNumberEditor key={key} {...itemProps} />
               })}
             </TabPane>
           </Tabs>

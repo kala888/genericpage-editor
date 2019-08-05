@@ -37,6 +37,17 @@ const { Panel } = Collapse
 
 @connect(({ page }) => ({ ...page }))
 class MenuPane extends React.PureComponent {
+  state = {
+    activeKey: 'pages',
+  }
+
+  handleTabClick = tab => {
+    console.log('asdfasdfasdf', tab)
+    this.setState({ activeKey: tab })
+  }
+
+  switch2Editor = () => this.setState({ activeKey: 'editor' })
+
   render() {
     const { scaleValue, menuGroups = [], pageList = [] } = this.props
 
@@ -59,7 +70,7 @@ class MenuPane extends React.PureComponent {
           </Button>
         </ScaleOption>
 
-        <Tabs defaultActiveKey="pages" type="card">
+        <Tabs type="card" activeKey={this.state.activeKey} onTabClick={this.handleTabClick}>
           <TabPane tab="页面" key="pages">
             <PageContent>
               <NewPagePopup projectId={projectId} />
@@ -69,6 +80,7 @@ class MenuPane extends React.PureComponent {
                   isEditing={it.id === id}
                   projectId={projectId}
                   page={it}
+                  onItemDoubleClick={this.switch2Editor}
                 />
               ))}
             </PageContent>
