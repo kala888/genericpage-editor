@@ -17,6 +17,7 @@ function getPageKeyByUri(uri = '') {
 }
 
 function inBlackList(key, page) {
+  console.log('backendRouterPageBlackList', NiceRouter.config)
   const result =
     NiceRouter.config.backendRouterPageBlackList.includes(page) ||
     NiceRouter.config.backendRouterPageKeyBlackList.includes(key)
@@ -43,6 +44,7 @@ LocalCache.saveBackendRouter = async (uri, page) => {
 // 后端路由缓存
 LocalCache.getCachedPage = async uri => {
   const key = getPageKeyByUri(uri)
+  console.log('keykeykeykeykey', key)
   const pageName = await StorageTools.get(key)
   return pageName
 }

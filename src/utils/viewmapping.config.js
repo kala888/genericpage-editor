@@ -1,19 +1,15 @@
-const view = {
-  'com.mock': {
-    // pageName: 'CartPage',
-    // stateAction: 'cart/save',
-    pageName: 'AllArtistListPage',
-    stateAction: 'allArtistList/save',
-  },
-  'com.terapico.moyi.appview.HomePage': {
+const ViewmappingConfig = {
+  'com.doublechaintech.tao.project.Project': {
     pageName: '/',
-    stateAction: 'home/save',
+    stateAction: 'simulator/saveToSimulator',
+  },
+  'com.doublechaintech.tao.page.Page': {
+    pageName: '/',
+    stateAction: 'page/save',
+  },
+  'com.doublechaintech.tao.LoginForm': {
+    pageName: '/login',
   },
 }
 
-const error = {}
-const BackendRouterViewMapping = { view, error }
-
-export default BackendRouterViewMapping
-
-//
+export default ViewmappingConfig

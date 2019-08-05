@@ -7,7 +7,7 @@ const CACHE_EXPIRATION_PREFIX = 'cacheexpiration-'
 const EXPIRY_UNITS = 60 * 1000
 
 const shortKey = key => (key.length > 100 ? md5(key) : key)
-const fail = () => Promise.reject(null)
+// const fail = () => Promise.reject(null)
 
 const getKeys = _.memoize((key = '') => {
   const short = shortKey(key)
@@ -19,103 +19,88 @@ const getKeys = _.memoize((key = '') => {
 const currentTime = () => Math.floor(new Date().getTime() / EXPIRY_UNITS)
 
 const AsyncStorage = {
-  getItem: async () => {},
-  removeItem: async () => {},
+  getItem: async () => null,
+  removeItem: () => new Promise(),
   multiRemove: async () => {},
   setItem: async () => {},
-  getAllKeys: async () => {},
+  getAllKeys: async () => [],
   flushExpired: async () => {},
 }
 
 const StorageTools = {
   PageCachePrefix: 'page-cache-',
 
-  get(key, defaultValue = null) {
+  async get(key, defaultValue = null) {
     const { exprKey, theKey } = getKeys(key)
-    return AsyncStorage.getItem(exprKey)
-      .then(expiry => {
-        if (expiry && currentTime() >= parseInt(expiry, 10)) {
-          AsyncStorage.multiRemove([exprKey, theKey])
-          return Promise.resolve(null)
-        }
-        return AsyncStorage.getItem(theKey)
-          .then(value => Promise.resolve(value !== null ? JSON.parse(value) : defaultValue))
-          .catch(fail)
-      })
-      .catch(fail)
+    const expiry = AsyncStorage.getItem(exprKey)
+    if (expiry && currentTime() >= parseInt(expiry, 10)) {
+      AsyncStorage.multiRemove([exprKey, theKey])
+      return null
+    }
+    const value = await AsyncStorage.getItem(theKey)
+    return value !== null ? JSON.parse(value) : defaultValue
   },
 
-  set(key, value = '', time) {
+  async set(key, value = '', time) {
     const { exprKey, theKey } = getKeys(key)
     if (time) {
       const strTime = (currentTime() + time).toString()
-      return AsyncStorage.setItem(exprKey, strTime)
-        .then(() => AsyncStorage.setItem(theKey, JSON.stringify(value)))
-        .catch(fail)
+      await AsyncStorage.setItem(exprKey, strTime)
+      const result = await AsyncStorage.setItem(theKey, JSON.stringify(value))
+      return result
     }
     AsyncStorage.removeItem(exprKey)
-    return AsyncStorage.setItem(theKey, JSON.stringify(value))
+    const result = await AsyncStorage.setItem(theKey, JSON.stringify(value))
+    return result
   },
 
-  remove(key) {
+  async remove(key) {
     const { exprKey, theKey } = getKeys(key)
-    return AsyncStorage.multiRemove([exprKey, theKey])
+    await AsyncStorage.multiRemove([exprKey, theKey])
   },
 
-  isExpired(key) {
+  async isExpired(key) {
     const { exprKey } = getKeys(key)
-    return AsyncStorage.getItem(exprKey)
-      .then(expiry => {
-        const expired = expiry && currentTime() >= parseInt(expiry, 10)
-        return Promise.resolve(expired)
-      })
-      .catch(fail)
+    const expiry = await AsyncStorage.getItem(exprKey)
+    const expired = expiry && currentTime() >= parseInt(expiry, 10)
+    return expired
   },
 
-  flush() {
-    return AsyncStorage.getAllKeys()
-      .then(keys => {
-        const allKeys = keys.filter(
-          key => key.indexOf(CACHE_PREFIX) === 0 || key.indexOf(CACHE_EXPIRATION_PREFIX) === 0
-        )
-        return AsyncStorage.multiRemove(allKeys)
-      })
-      .catch(fail)
+  async flush() {
+    const keys = await AsyncStorage.getAllKeys()
+    const allKeys = keys.filter(
+      key => key.indexOf(CACHE_PREFIX) === 0 || key.indexOf(CACHE_EXPIRATION_PREFIX) === 0
+    )
+    const result = await AsyncStorage.multiRemove(allKeys)
+    return result
   },
 
-  flushWithPrefix(prefix) {
-    return AsyncStorage.getAllKeys()
-      .then(keys => {
-        const allKeys = keys.filter(
-          key =>
-            key.indexOf(`${CACHE_PREFIX}${prefix}`) === 0 ||
-            key.indexOf(`${CACHE_EXPIRATION_PREFIX}${prefix}`) === 0
-        )
-        return AsyncStorage.multiRemove(allKeys)
-      })
-      .catch(fail)
+  async flushWithPrefix(prefix) {
+    const keys = await AsyncStorage.getAllKeys()
+
+    const allKeys = keys.filter(
+      key =>
+        key.indexOf(`${CACHE_PREFIX}${prefix}`) === 0 ||
+        key.indexOf(`${CACHE_EXPIRATION_PREFIX}${prefix}`) === 0
+    )
+    await AsyncStorage.multiRemove(allKeys)
   },
 
-  flushExpired() {
-    return AsyncStorage.getAllKeys()
-      .then(keys => {
-        keys.forEach(key => {
-          if (key.indexOf(CACHE_EXPIRATION_PREFIX) === 0) {
-            const exprKey = key
-            return AsyncStorage.getItem(exprKey)
-              .then(expiry => {
-                if (expiry && currentTime() >= parseInt(expiry, 10)) {
-                  const theKey = CACHE_PREFIX + key.replace(CACHE_EXPIRATION_PREFIX, '')
-                  return AsyncStorage.multiRemove([exprKey, theKey])
-                }
-                return Promise.resolve()
-              })
-              .catch(fail)
-          }
-          return Promise.resolve()
-        })
-      })
-      .catch(fail)
+  async flushExpired() {
+    const keys = await AsyncStorage.getAllKeys()
+
+    keys.forEach(async key => {
+      if (key.indexOf(CACHE_EXPIRATION_PREFIX) === 0) {
+        const exprKey = key
+        const expiry = await AsyncStorage.getItem(exprKey)
+        if (expiry && currentTime() >= parseInt(expiry, 10)) {
+          const theKey = CACHE_PREFIX + key.replace(CACHE_EXPIRATION_PREFIX, '')
+          await AsyncStorage.multiRemove([exprKey, theKey])
+        }
+        return Promise.resolve()
+      }
+      return Promise.resolve()
+    })
   },
 }
 

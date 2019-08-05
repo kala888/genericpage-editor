@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button } from 'antd'
 import styled from 'styled-components'
+import NavigationService from '../../../nice-router/navigation.service'
+import Config from '../../../utils/config'
 
 const Container = styled.div`
   padding: 5px 5px 5px 15px;
@@ -8,6 +10,7 @@ const Container = styled.div`
   margin-top: 3px;
   display: flex;
   flex: 1;
+  box-shadow: ${({ isEditing }) => (isEditing ? '0 0 4px deepskyblue' : 'inherit')};
   &:hover {
     box-shadow: 0 0 4px deepskyblue;
     transition: box-shadow 0.5s;
@@ -26,33 +29,46 @@ const Options = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100px;
+  width: 120px;
 `
 
 class MenuPageItem extends React.PureComponent {
-  handleEditPage = e => {
-    console.log(e)
+  openEditPagePopup = () => {
+    NavigationService.view('simulator/editPage', {})
   }
 
-  handleCopyPage = e => {
-    console.log(e)
+  openPageInEditor = () => {
+    NavigationService.ajax(Config.api.ViewPage, this.props.page)
+  }
+
+  handleCopyPage = () => {
+    const { page: { id, project = {} } = {} } = this.props
+    NavigationService.ajax(Config.api.CopyPage, {
+      projectId: project.id,
+      pageId: id,
+    })
   }
 
   showQRCode = e => {
     console.log(e)
   }
 
-  removePage = e => {
-    console.log(e)
+  removePage = () => {
+    const { page: { id, project = {} } = {} } = this.props
+    NavigationService.post(Config.api.RemovePage, {
+      projectId: project.id,
+      pageIds: id,
+    })
   }
 
   render() {
-    const { page: { title } = {} } = this.props
+    const { page: { title } = {}, isEditing = false } = this.props
 
     return (
-      <Container onClick={this.handleEditPage}>
+      <Container onClick={this.openPageInEditor} isEditing={isEditing}>
         <Title>{title}</Title>
         <Options className="option">
+          <Button size="small" shape="circle" icon="setting" onClick={this.openEditPagePopup} />
           <Button size="small" shape="circle" icon="copy" onClick={this.handleCopyPage} />
           <Button size="small" shape="circle" icon="qrcode" onClick={this.showQRCode} />
           <Button size="small" shape="circle" icon="delete" onClick={this.removePage} />

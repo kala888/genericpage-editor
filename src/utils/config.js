@@ -1,5 +1,4 @@
-import ViewMapping from './viewmapping.config'
-
+import viewConfig from './viewmapping.config'
 // const baseURL = 'https://www.biubiuguai.com/mobile-testing/'
 const baseURL = 'https://demo.doublechaintech.com/tao/'
 
@@ -7,15 +6,15 @@ const niceRouterConfig = {
   baseURL,
   version: 53,
   appType: 'CommunityUser',
-  viewConfig: {
-    view: ViewMapping.view,
-    error: ViewMapping.error,
-  },
+  viewConfig,
   backendRouterPageKeyBlackList: ['refreshPage/', 'goBack/', 'goPrevious/'],
   backendRouterPageBlackList: ['NetworkException', 'EditProfileForm', 'Login', 'Me', 'UserDetail'],
   api: {
-    VerifyCode: '',
     FooterHome: 'projectManager/view/P000001/',
+    ViewPage: 'pageManager/view/:id/',
+    AddPage: 'projectManager/addPage/projectId/title/brief/content/none/',
+    RemovePage: 'projectManager/removePageList/projectId/pageIds/none/',
+    CopyPage: 'projectManager/copyPageFrom/:projectId/:pageId/1/none/',
   },
 }
 

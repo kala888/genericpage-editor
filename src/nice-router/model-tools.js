@@ -1,107 +1,62 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
-/* eslint-disable array-callback-return */
-/* eslint-disable no-return-assign */
-
-import _ from 'lodash'
-import { connect } from 'dva/index'
+import isArray from 'lodash/isArray'
+import isEmpty from 'lodash/isEmpty'
+import mergeWith from 'lodash/mergeWith'
+import concat from 'lodash/concat'
 
 function replaceArray(objValue, srcValue) {
-  if (_.isArray(objValue)) {
+  if (isArray(objValue)) {
     return srcValue
   }
 }
 
-function apppendArray(objValue, srcValue) {
-  if (_.isArray(objValue)) {
-    return _.concat(objValue, srcValue)
+function concatArray(objValue, srcValue) {
+  if (isArray(objValue)) {
+    return concat(objValue, srcValue)
   }
 }
 
-function save(state, payload, namespace) {
-  const { statInPage, arrayMerge, stateName = 'root', ...resp } = payload
+function mergeState(preState = {}, newState = {}, doMerge = false, arrayMerge = 'append') {
+  const { viewHashString: preHash } = preState
+  const { viewHashString: newHash } = newState
 
-  const { viewHashString } = resp
-  const preHash = (state[stateName] || {}).viewHashString
-  if (!_.isEmpty(viewHashString) && preHash === viewHashString) {
-    return {}
+  // 数据没有变化
+  if (!isEmpty(newHash) && preHash === newHash) {
+    return null
   }
 
-  const result = {}
-  result[stateName] = resp
-
-  // 如果是数组，就替换掉，OOTB的Merge会合并两个数组
-  if (statInPage) {
-    console.log('do data merge', payload)
-    let processor = apppendArray
-    if (arrayMerge === 'replace') {
-      processor = replaceArray
-    }
-    result[stateName] = _.mergeWith({}, state[stateName], resp, processor)
+  // 不进行merge操作
+  if (!doMerge) {
+    return newState
   }
-  console.log('update', namespace, 'module', result)
+
+  // merge 对象, 不指定array的merge方法，默认为concat data to legacy array
+  const processor = arrayMerge === 'replace' ? replaceArray : concatArray
+  const result = mergeWith(preState, newState, processor)
+  console.log('merged result', result)
+
   return result
 }
 
 const createDefault = namespace => ({
   namespace,
-  state: {
-    root: {},
-    loading: false,
-  },
+  state: {},
   effects: {},
   reducers: {
-    save(state, { payload }) {
-      const result = save(state, payload, namespace)
-      console.log('doooooo, model save')
-      return { ...state, ...result }
+    clear() {
+      return {}
     },
-    saveToStore(state, { payload }) {
-      return { ...state, ...payload }
+    save(state, { payload }) {
+      const { statInPage, arrayMerge, ...resp } = payload
+      const result = mergeState(state, resp, statInPage, arrayMerge)
+      console.log('....', result)
+      return result || state
     },
   },
 })
 
-const mergeModel = (namespace, instance) => {
-  const baseModel = createDefault(namespace)
-  if (instance) {
-    return _.merge(baseModel, instance)
-  }
-  return baseModel
-}
-
-export function modelConnect(...modelList) {
-  modelList.map(namespace => {
-    const isModleCreated = _.find(window.g_app._models, it => it.namespace === namespace)
-    if (!isModleCreated) {
-      window.g_app.model(createDefault(namespace))
-    }
-  })
-
-  return target => {
-    const mapStateToProps = state => {
-      let newState = {}
-
-      _.forEach(modelList, (it, index) => {
-        if (index === 0) {
-          const temp = state[it] || {}
-          newState = {
-            ...temp,
-          }
-        }
-        newState[it] = state[it]
-      })
-
-      return newState
-    }
-
-    return connect(mapStateToProps)(target)
-  }
-}
-
-export default {
-  save,
-  mergeModel,
+const ModelTools = {
+  mergeState,
   createDefault,
 }
+export default ModelTools

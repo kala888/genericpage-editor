@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react'
 import { Button, Checkbox, Form, Input, Modal } from 'antd'
 import styled from 'styled-components'
 import { showFormError } from '../../../utils'
+import Config from '../../../utils/config'
+import NavigationService from '../../../nice-router/navigation.service'
 
 const Container = styled.div`
   display: flex;
@@ -41,6 +43,10 @@ class NewPagePopup extends PureComponent {
         visible: false,
       })
       console.log('values', values)
+      NavigationService.post(Config.api.AddPage, {
+        projectId: this.props.projectId,
+        ...values,
+      })
     })
   }
 

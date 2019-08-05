@@ -11,10 +11,7 @@ const defaultConfig = {
   version: 1,
   appType: 'H5Page',
   api: {},
-  viewConfig: {
-    view: defaultViewConfig,
-    error: {},
-  },
+  viewConfig: defaultViewConfig,
   backendRouterPageBlackList: [],
   backendRouterPageKeyBlackList: [],
 }
@@ -31,6 +28,12 @@ const NiceRouter = {
 
 NiceRouter.start = ({ config = {} }) => {
   NiceRouter.config = _.merge(defaultConfig, config)
+  const processedViewConfig = {}
+  _.forEach(NiceRouter.config.viewConfig, (value, key) => {
+    processedViewConfig[_.trim(key)] = value
+  })
+  NiceRouter.config.viewConfig = processedViewConfig
+
   NiceRouter.status = NiceRouterStatus.done
 
   return NiceRouter

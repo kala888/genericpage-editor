@@ -80,7 +80,7 @@ const HttpRequest = {
     axios.defaults.withCredentials = true
     axios.defaults.headers.common['X-App-Type'] = NiceRouter.config.appType
     axios.defaults.headers.common['X-App-Version'] = version || NiceRouter.config.version
-    axios.defaults.headers.common.cookies = 'JSESSIONID=abcaN3cP_psryaJy2mbVw'
+    // axios.defaults.headers.common.cookies = 'JSESSIONID=abcw4jvVMIrce58_rsrXw'
     // axios.defaults.headers.common['Accept-Encoding'] = 'gzip, deflate'  // TODO why android don't support gzip
     // axios.defaults.headers.common['Accept-Encoding'] = 'deflate'
   },

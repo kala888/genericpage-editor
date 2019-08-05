@@ -3,8 +3,6 @@ import qs from 'qs'
 import _ from 'lodash'
 import router from 'umi/router'
 
-import localCacheService from './local-cache.service'
-
 const getActionUri = action => {
   let result = action
   if (_.isObject(action)) {
@@ -27,12 +25,17 @@ const NavigationService = {
     router.goBack()
   },
 
-  navigate({ routeName }) {
-    if (routeName.startsWith('http')) {
-      window.location.href = routeName
+  navigate(params) {
+    if (!params) {
       return
     }
-    router.push(routeName)
+    const path = params.routeName || params || ''
+
+    if (path.startsWith('http')) {
+      window.location.href = path
+      return
+    }
+    router.push(path)
   },
 
   view(uri, params = {}, options = {}) {
@@ -67,7 +70,8 @@ const NavigationService = {
   },
 
   async routeTo(action) {
-    const { uri: actionUri = '', cache = false, params } = action
+    // const { uri: actionUri = '', cache = false, params } = action
+    const { uri: actionUri = '', params } = action
 
     const uri = getActionUri(actionUri)
 
@@ -97,17 +101,17 @@ const NavigationService = {
     // }
 
     // 3, 后端路由, 获取后端路由缓存
-    const cachedPage = await localCacheService.getCachedPage(uri)
-    console.log('go to cached page first', cachedPage)
-    // 如果缓存存在，做页面跳转
-    if (cachedPage) {
-      this.navigate(cachedPage)
-      // TODO
-      console.log('need CACHE the DATA', cache)
-      // if (cache) {
-      //   return
-      // }
-    }
+    // const cachedPage = await localCacheService.getCachedPage(uri)
+    // console.log('go to cached page first', cachedPage)
+    // // 如果缓存存在，做页面跳转
+    // if (cachedPage) {
+    //   this.navigate(cachedPage)
+    //   // TODO
+    //   console.log('need CACHE the DATA', cache)
+    //   // if (cache) {
+    //   //   return
+    //   // }
+    // }
 
     // 发送请求
     this.dispatch('niceRouter/route', {

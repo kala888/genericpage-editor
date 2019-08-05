@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'dva'
 import styled from 'styled-components'
 import { Button, Collapse, Tabs } from 'antd'
 import GroupedMenu from './grouped-menu'
@@ -34,9 +35,13 @@ const PageContent = styled(Content)`
 const { TabPane } = Tabs
 const { Panel } = Collapse
 
+@connect(({ page }) => ({ ...page }))
 class MenuPane extends React.PureComponent {
   render() {
-    const { scaleValue, menuGroups } = this.props
+    const { scaleValue, menuGroups = [], pageList = [] } = this.props
+
+    const { projectId, id } = this.props
+
     const activePaneList = menuGroups.map(it => it.groupId)
     console.log('activePaneList', activePaneList)
     return (
@@ -57,21 +62,28 @@ class MenuPane extends React.PureComponent {
         <Tabs defaultActiveKey="pages" type="card">
           <TabPane tab="页面" key="pages">
             <PageContent>
-              <NewPagePopup />
-              <MenuPageItem page={{ title: '页面页面页面页面1' }} />
-              <MenuPageItem page={{ title: '页面2' }} />
-              <MenuPageItem page={{ title: '页面3' }} />
-              <MenuPageItem page={{ title: '页面4' }} />
+              <NewPagePopup projectId={projectId} />
+              {pageList.map(it => (
+                <MenuPageItem
+                  key={it.id}
+                  isEditing={it.id === id}
+                  projectId={projectId}
+                  page={it}
+                />
+              ))}
             </PageContent>
           </TabPane>
           <TabPane tab="页面编辑器" key="editor">
             <Content>
               <Collapse defaultActiveKey={activePaneList} expandIconPosition="right">
-                {menuGroups.map(it => (
-                  <Panel key={it.groupId} header={it.title}>
-                    <GroupedMenu groupId={it.groupId} title={it.title} list={it.list} />
-                  </Panel>
-                ))}
+                {menuGroups.map(it => {
+                  const { title, groupId, list } = it
+                  return (
+                    <Panel key={groupId} header={title}>
+                      <GroupedMenu groupId={groupId} title={title} list={list} />
+                    </Panel>
+                  )
+                })}
               </Collapse>
             </Content>
           </TabPane>

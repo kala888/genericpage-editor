@@ -1,5 +1,9 @@
 import _ from 'lodash'
 import ModelCenter from './nice-router/model-center'
+import Config from './utils/config'
+import NiceRouter from './nice-router/nice-router'
+
+NiceRouter.start({ config: Config })
 
 export function render(oldRender) {
   _.each(ModelCenter.modlels, it => {

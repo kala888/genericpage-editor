@@ -1,12 +1,13 @@
 import _ from 'lodash'
 import modelTools from './model-tools'
+import niceRouterModel from './nicer-router.model'
 import elementModel from '../components/simulator/element.model'
 import simulatorModel from '../components/simulator/simulator.model'
 
 // 普通的model,也可以通过@modelConnect('home','regisry')来创建和connect
 // const modelList = [app,home,'registry', 'article', 'artwork']
 
-const modelList = ['home', elementModel, simulatorModel]
+const modelList = [niceRouterModel, 'home', 'page', elementModel, simulatorModel]
 const modlels = modelList.map(it => {
   if (_.isString(it)) {
     return modelTools.createDefault(it)
