@@ -164,8 +164,14 @@ class SimulatorPage extends React.PureComponent {
               />
             </Left>
             <Body>
-              <SimulatorContainer scale={scale} list={screen} page={page} />
-              <PageOption page={page} />
+              {_.isEmpty(page) ? (
+                <Project>{displayName}</Project>
+              ) : (
+                <React.Fragment>
+                  <SimulatorContainer scale={scale} list={screen} page={page} />
+                  <PageOption page={page} />
+                </React.Fragment>
+              )}
             </Body>
             <Right>
               <PropsEditor list={screen} />
