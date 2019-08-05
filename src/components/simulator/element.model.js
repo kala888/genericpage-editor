@@ -31,6 +31,9 @@ export default {
       const { id } = payload
 
       const item = _.merge(state[id], payload)
+
+      console.log('clickToEdit', item)
+
       // 原始item， // 存储propList 用于生成属性编辑器
       // {
       //   id: uuid(),

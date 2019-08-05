@@ -38,23 +38,27 @@ export default {
     },
   },
   reducers: {
-    saveToStore(state, { payload }) {
-      return { ...state, ...payload }
-    },
     saveToSimulator(state, { payload }) {
       const { statInPage, arrayMerge, ...resp } = payload
       const result = ModelTools.mergeState(state, resp, statInPage, arrayMerge)
 
-      const { componentList = [], componentGroupList = [] } = result
+      const { componentList = [], componentGroupList = [], uiPropertyList } = result
 
-      const dataMap = _.groupBy(componentList, it => it.componentGroup.id)
-
+      const groupedUiProperties = _.groupBy(uiPropertyList, it => it.component.id)
+      const enrichComp = componentList.map(it => ({
+        ...it,
+        propList: groupedUiProperties[it.id],
+      }))
+      const dataMap = _.groupBy(enrichComp, it => it.componentGroup.id)
       const menuGroups = componentGroupList.map(group => ({
         ...group,
         list: dataMap[group.id],
       }))
 
       return { ...state, menuGroups, ...result }
+    },
+    saveToStore(state, { payload }) {
+      return { ...state, ...payload }
     },
     resetScale(state) {
       return {

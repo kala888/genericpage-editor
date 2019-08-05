@@ -33,7 +33,7 @@ class Element extends React.Component {
   }
 
   handleClick = () => {
-    console.log('Element-Click', this.props)
+    console.log('Element Click', this.props)
     // 点击的时候，切换右侧"属性编辑器"
     NavigationService.dispatch('element/clickToEdit', this.props.item)
   }

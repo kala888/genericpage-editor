@@ -61,7 +61,7 @@ class PropsEditor extends PureComponent {
 
     const { title = '组件', id, propList = [] } = ele
 
-    console.log('props editor render', ele)
+    console.log('props-editor render', ele)
 
     return (
       <Container>
