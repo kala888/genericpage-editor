@@ -52,15 +52,16 @@ const WechatScreenBody = styled.div`
   overflow: auto;
 `
 
-class SimulatorContainer extends React.PureComponent {
+class ScreenContainer extends React.PureComponent {
   render() {
-    const { scale, list = [] } = this.props
+    const { scale, list = [], title } = this.props
+
     return (
       <Container scaleTo={scale}>
         <WechatScreen>
           <WechatScreenHeader>
             <img alt="wechat-header" style={{ width: '100%' }} src={wechatHeaderImg} />
-            <ScreenHeaderText>首页</ScreenHeaderText>
+            <ScreenHeaderText>{title}</ScreenHeaderText>
           </WechatScreenHeader>
           <Droppable droppableId="screen">
             {(provided, snapshot) => (
@@ -78,4 +79,4 @@ class SimulatorContainer extends React.PureComponent {
   }
 }
 
-export default SimulatorContainer
+export default ScreenContainer

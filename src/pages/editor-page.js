@@ -2,8 +2,9 @@ import React from 'react'
 import _ from 'lodash'
 import { DragDropContext } from 'react-beautiful-dnd'
 import styled from 'styled-components'
+import { Modal } from 'antd'
 import { connect } from 'dva'
-import SimulatorContainer from '../components/simulator/simulator-container'
+import ScreenContainer from '../components/simulator/screen-container'
 import PropsEditor from '../components/simulator/props-editor'
 import NavigationService from '../nice-router/navigation.service'
 import PageOption from '../components/simulator/page-option'
@@ -18,28 +19,10 @@ const Project = styled.div`
   font-size: 30px;
   flex-direction: row;
   display: flex;
+  justify-content: center;
   align-self: center;
   padding: 10px 30px;
   color: deepskyblue;
-`
-
-const PageTitle = styled.div`
-  flex: 1;
-  text-align: center;
-  font-size: 40px;
-  flex-direction: row;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #666;
-`
-
-const PageBrief = styled.div`
-  align-self: flex-end;
-  margin-left: 20px;
-  font-size: 16px;
-  vertical-align: bottom;
-  color: #666;
 `
 
 const Page = styled.div`
@@ -66,16 +49,17 @@ const Right = styled(Pane)`
 const Body = styled(Pane)`
   flex: 1;
   flex-direction: row;
-  alignitems: 'flex-end';
+  align-items: 'flex-end';
   justify-content: center;
   border-left: 2px solid #eee;
   border-right: 2px solid #eee;
 `
+
 const Left = styled(Pane)`
   width: 450px;
 `
 
-@connect(({ simulator, page }) => ({ ...simulator, page }))
+@connect(({ editor, page }) => ({ ...editor, page }))
 class SimulatorPage extends React.PureComponent {
   componentDidMount() {
     console.log(Config.api.FooterHome)
@@ -83,11 +67,11 @@ class SimulatorPage extends React.PureComponent {
   }
 
   handleScale = (decrease = false) => {
-    NavigationService.dispatch('simulator/scale', { decrease })
+    NavigationService.dispatch('editor/scale', { decrease })
   }
 
   handleResetScale = () => {
-    NavigationService.dispatch('simulator/resetScale')
+    NavigationService.dispatch('editor/resetScale')
   }
 
   onDragUpdate = result => {
@@ -96,6 +80,11 @@ class SimulatorPage extends React.PureComponent {
 
   onDragEnd = result => {
     const { source, destination, draggableId } = result
+
+    if (_.isEmpty(this.props.page)) {
+      Modal.info({ content: '请选择或者创建一个页面' })
+      return
+    }
 
     console.log('onDragEnd', result)
     // dropped outside the list
@@ -112,19 +101,19 @@ class SimulatorPage extends React.PureComponent {
     }
 
     if (dragFrom === 'screen' && dragTo === 'trash') {
-      NavigationService.dispatch('simulator/removeItem', payload)
+      NavigationService.dispatch('editor/removeItem', payload)
       return
     }
 
     if (dragFrom === dragTo) {
       // 自己排序
-      NavigationService.dispatch('simulator/reorderMenuList', payload)
+      NavigationService.dispatch('editor/reorderMenuList', payload)
       return
     }
 
     if (dragFrom.indexOf('menu-items') > -1 && dragTo === 'screen') {
-      // 从侧栏拖元素到simulator的screen
-      NavigationService.dispatch('simulator/dragToScreen', payload)
+      // 从侧栏拖元素到screen
+      NavigationService.dispatch('editor/dragToScreen', payload)
       return
     }
 
@@ -134,24 +123,15 @@ class SimulatorPage extends React.PureComponent {
   }
 
   render() {
-    const { scaleValues, scaleIndex, screen, menuGroups } = this.props
+    const { scaleValues, scaleIndex, screen, menuGroups, page = {} } = this.props
     const { pageList, displayName, id } = this.props
     const scaleValue = scaleValues[scaleIndex]
     const scale = scaleValue / 100
 
     console.log('render editor page', this.props)
-
-    const { page = {} } = this.props
     return (
       <Container>
-        <Project>
-          {displayName}
-          {!_.isEmpty(page) && (
-            <PageTitle>
-              「{page.title}」<PageBrief>{page.brief}</PageBrief>
-            </PageTitle>
-          )}
-        </Project>
+        <Project>{displayName}</Project>
 
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Page>
@@ -164,14 +144,8 @@ class SimulatorPage extends React.PureComponent {
               />
             </Left>
             <Body>
-              {_.isEmpty(page) ? (
-                <Project>{displayName}</Project>
-              ) : (
-                <React.Fragment>
-                  <SimulatorContainer scale={scale} list={screen} page={page} />
-                  <PageOption page={page} />
-                </React.Fragment>
-              )}
+              <ScreenContainer scale={scale} list={screen} title={page.title} />
+              <PageOption page={page} />
             </Body>
             <Right>
               <PropsEditor list={screen} />

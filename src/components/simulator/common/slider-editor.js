@@ -49,7 +49,13 @@ class SliderEditor extends React.Component {
           {getFieldDecorator(name, {
             initialValue: value,
           })(
-            <InputNumber min={min} max={max} style={{ marginLeft: 16 }} onChange={this.onChange} />
+            <InputNumber
+              min={min}
+              max={max}
+              style={{ marginLeft: 16 }}
+              onChange={this.onChange}
+              size="small"
+            />
           )}
         </Col>
       </Row>

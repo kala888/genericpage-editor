@@ -13,6 +13,7 @@ const niceRouterConfig = {
     FooterHome: 'projectManager/view/P000001/',
     ViewPage: 'pageManager/view/:id/',
     AddPage: 'projectManager/addPage/projectId/title/brief/content/none/',
+    UpdatePage: 'projectManager/updatePageProperties/projectId/id/title/brief/content/none/',
     RemovePage: 'projectManager/removePageList/projectId/pageIds/none/',
     CopyPage: 'projectManager/copyPageFrom/:projectId/:pageId/1/none/',
   },

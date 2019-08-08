@@ -66,7 +66,7 @@ class NewPagePopup extends PureComponent {
           onClick={this.showNewPagePopup}
           style={{ backgroundColor: 'transparent' }}
         >
-          +新建页面
+          + 新建页面
         </Button>
         <Modal
           visible={this.state.visible}

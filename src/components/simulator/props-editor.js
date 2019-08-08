@@ -98,8 +98,11 @@ class PropsEditor extends PureComponent {
                   form,
                   key,
                 }
-                console.log('ekkkkkkk', key)
-                return <InputNumberEditor key={key} {...itemProps} />
+                return (
+                  <div key={key} style={{ paddingBottom: '10px' }}>
+                    <InputNumberEditor {...itemProps} />
+                  </div>
+                )
               })}
             </TabPane>
           </Tabs>

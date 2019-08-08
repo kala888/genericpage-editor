@@ -52,7 +52,6 @@ class MenuPane extends React.PureComponent {
     const { scaleValue, menuGroups = [], pageList = [] } = this.props
 
     const { projectId, id } = this.props
-
     const activePaneList = menuGroups.map(it => it.groupId)
     console.log('activePaneList', activePaneList)
     return (

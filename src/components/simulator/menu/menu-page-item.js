@@ -35,7 +35,7 @@ const Options = styled.div`
 
 class MenuPageItem extends React.PureComponent {
   openEditPagePopup = () => {
-    NavigationService.view('simulator/editPage', {})
+    NavigationService.view('editor/editPage', {})
   }
 
   handleCopyPage = () => {
@@ -67,13 +67,17 @@ class MenuPageItem extends React.PureComponent {
       this.clickedOnce = false
       console.log('double click')
       const { onItemDoubleClick } = this.props
-      NavigationService.ajax(Config.api.ViewPage, this.props.page, {
-        onSuccess: () => {
-          if (onItemDoubleClick) {
-            onItemDoubleClick()
-          }
-        },
-      })
+      NavigationService.ajax(
+        Config.api.ViewPage,
+        { id: this.props.page.id },
+        {
+          onSuccess: () => {
+            if (onItemDoubleClick) {
+              onItemDoubleClick()
+            }
+          },
+        }
+      )
     } else {
       this.delayedClick(e)
       this.clickedOnce = true
@@ -82,7 +86,7 @@ class MenuPageItem extends React.PureComponent {
 
   doClick = () => {
     this.clickedOnce = undefined
-    NavigationService.ajax(Config.api.ViewPage, this.props.page)
+    NavigationService.ajax(Config.api.ViewPage, { id: this.props.page.id })
   }
 
   render() {

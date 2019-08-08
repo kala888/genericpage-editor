@@ -1,11 +1,11 @@
 const ViewmappingConfig = {
   'com.doublechaintech.tao.project.Project': {
     pageName: '/',
-    stateAction: 'simulator/saveToSimulator',
+    stateAction: 'editor/save',
   },
   'com.doublechaintech.tao.page.Page': {
     pageName: '/',
-    stateAction: 'page/save',
+    stateAction: 'page/savePage',
   },
   'com.doublechaintech.tao.LoginForm': {
     pageName: '/login',

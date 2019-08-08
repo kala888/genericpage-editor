@@ -77,7 +77,7 @@ class DraggableElement extends React.PureComponent {
       title: '组件删除提示',
       content: '是否确定要从页面删除这个组件？',
       onOk() {
-        NavigationService.dispatch('simulator/removeItem', item)
+        NavigationService.dispatch('editor/removeItem', item)
       },
     })
   }

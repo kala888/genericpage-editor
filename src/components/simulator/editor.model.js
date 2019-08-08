@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import { message } from 'antd'
-import SimulatorTools from './simulator-tools'
 import { createAction } from '../../nice-router/nice-router-util'
 import ModelTools from '../../nice-router/model-tools'
+import EditorHelper from './editor-helper'
 
 export default {
-  namespace: 'simulator',
+  namespace: 'editor',
   state: {
     scaleValues: [30, 50, 65, 75, 80, 90, 100],
     scaleIndex: 2,
@@ -19,26 +19,34 @@ export default {
       yield put(createAction('saveToStore')({ screen: [] }))
       yield put(createAction('element/clear')())
     },
+
     *removeItem({ payload }, { put }) {
       yield put(createAction('removeScreenItem')(payload))
       yield put(createAction('element/removeItem')(payload))
     },
     *dragToScreen({ payload }, { put, select }) {
       const { source, destination } = payload
-      const currentState = yield select(state => state.simulator)
+      const currentState = yield select(state => state.editor)
 
       console.log('从侧栏拖元素到simulator的screen', source)
 
       const { menuGroups, screen } = currentState
       const sourceGroup = _.find(menuGroups, { groupId: source.droppableId })
       const { list: sourceList = [] } = sourceGroup
-      const { list, item } = SimulatorTools.copy(sourceList, screen, source, destination)
+      const { list, item } = EditorHelper.copy(sourceList, screen, source, destination)
       yield put(createAction('saveToStore')({ screen: list }))
       yield put(createAction('element/clickToEdit')(item))
     },
   },
   reducers: {
-    saveToSimulator(state, { payload }) {
+    updateScreen(state, { payload }) {
+      console.log('updateScreen', payload)
+      return {
+        ...state,
+        screen: payload,
+      }
+    },
+    save(state, { payload }) {
       const { statInPage, arrayMerge, ...resp } = payload
       const result = ModelTools.mergeState(state, resp, statInPage, arrayMerge)
 
@@ -57,9 +65,11 @@ export default {
 
       return { ...state, menuGroups, ...result }
     },
+
     saveToStore(state, { payload }) {
       return { ...state, ...payload }
     },
+
     resetScale(state) {
       return {
         ...state,
@@ -94,7 +104,7 @@ export default {
       console.log('侧栏 排序', payload)
       const { source, destination } = payload
       const preList = state[source.droppableId]
-      const list = SimulatorTools.reorder(preList, source.index, destination.index)
+      const list = EditorHelper.reorder(preList, source.index, destination.index)
       return {
         ...state,
         [destination.droppableId]: list,
@@ -105,7 +115,7 @@ export default {
       console.log('页面的screen上，在source和dest 之间移动元素', payload)
       const { source, destination } = payload
 
-      const switchedResult = SimulatorTools.move(
+      const switchedResult = EditorHelper.move(
         state[source.droppableId],
         state[destination.droppableId],
         source,

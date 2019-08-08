@@ -47,6 +47,7 @@ class InputNumberEditor extends React.Component {
               max={maxLength}
               style={{ marginLeft: 16 }}
               onChange={this.onChange}
+              size="small"
             />
           )}
         </Col>

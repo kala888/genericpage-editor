@@ -35,6 +35,10 @@ const Trash = styled.div`
 
 @connect(({ element }) => ({ element }))
 class PageOption extends React.PureComponent {
+  handleSavePage = () => {
+    NavigationService.dispatch('page/saveScreenToPage')
+  }
+
   handleDashedEditing = () => {
     NavigationService.dispatch('element/dashedEditing')
   }
@@ -46,7 +50,7 @@ class PageOption extends React.PureComponent {
       okText: '我确认，已慎重考虑过了',
       okType: 'danger',
       onOk() {
-        NavigationService.dispatch('simulator/clearPage')
+        NavigationService.dispatch('editor/clearPage')
       },
     })
   }
@@ -61,6 +65,12 @@ class PageOption extends React.PureComponent {
 
     return (
       <Container>
+        <Item>
+          <Button block onClick={this.handleSavePage}>
+            保存页面
+          </Button>
+        </Item>
+
         <Item>
           <Button style={dashedEditingStyle} block onClick={this.handleDashedEditing}>
             虚框展示
