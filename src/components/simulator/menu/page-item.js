@@ -33,7 +33,7 @@ const Options = styled.div`
   width: 120px;
 `
 
-class MenuPageItem extends React.PureComponent {
+class PageItem extends React.PureComponent {
   openEditPagePopup = () => {
     NavigationService.view('editor/editPage', {})
   }
@@ -106,4 +106,4 @@ class MenuPageItem extends React.PureComponent {
   }
 }
 
-export default MenuPageItem
+export default PageItem

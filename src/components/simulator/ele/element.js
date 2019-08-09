@@ -27,11 +27,6 @@ function getComponentType(componentType) {
 }
 
 class Element extends React.Component {
-  static defaultProps = {
-    marginVertical: 0,
-    marginHorizontal: 0,
-  }
-
   handleClick = () => {
     console.log('Element Click', this.props)
     // 点击的时候，切换右侧"属性编辑器"
@@ -39,10 +34,10 @@ class Element extends React.Component {
   }
 
   render() {
-    const { componentType } = this.props
+    const { componentType, values = {} } = this.props
     const type = getComponentType(componentType)
     console.log('render Element', this.props)
-    const { marginVertical, marginHorizontal } = this.props
+    const { marginVertical = 0, marginHorizontal = 0 } = values
     return (
       <Container style={{ margin: `${marginVertical}px ${marginHorizontal}px` }}>
         {type === 'carousel' && <EleCarousel {...this.props} />}

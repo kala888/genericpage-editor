@@ -37,7 +37,7 @@ const Clone = styled(Item)`
   }
 `
 
-export default class GroupedMenu extends React.PureComponent {
+export default class ComponentGroupCard extends React.PureComponent {
   render() {
     const { list = [], groupId = 'menu-items' } = this.props
     return (

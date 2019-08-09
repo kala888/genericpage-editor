@@ -49,7 +49,7 @@ const Right = styled(Pane)`
 const Body = styled(Pane)`
   flex: 1;
   flex-direction: row;
-  align-items: 'flex-end';
+  align-items: flex-end;
   justify-content: center;
   border-left: 2px solid #eee;
   border-right: 2px solid #eee;
@@ -101,6 +101,7 @@ class SimulatorPage extends React.PureComponent {
     }
 
     if (dragFrom === 'screen' && dragTo === 'trash') {
+      // 从页面上铲除一个元素
       NavigationService.dispatch('editor/removeItem', payload)
       return
     }
@@ -123,8 +124,11 @@ class SimulatorPage extends React.PureComponent {
   }
 
   render() {
-    const { scaleValues, scaleIndex, screen, menuGroups, page = {} } = this.props
+    const { scaleValues, scaleIndex, componentGroups, page = {} } = this.props
     const { pageList, displayName, id } = this.props
+
+    const { title, screen, id: pageId } = page
+
     const scaleValue = scaleValues[scaleIndex]
     const scale = scaleValue / 100
 
@@ -139,12 +143,13 @@ class SimulatorPage extends React.PureComponent {
               <MenuPane
                 projectId={id}
                 scaleValue={scaleValue}
-                menuGroups={menuGroups}
+                componentGroups={componentGroups}
                 pageList={pageList}
+                editingPageId={pageId}
               />
             </Left>
             <Body>
-              <ScreenContainer scale={scale} list={screen} title={page.title} />
+              <ScreenContainer scale={scale} list={screen} title={title} />
               <PageOption page={page} />
             </Body>
             <Right>

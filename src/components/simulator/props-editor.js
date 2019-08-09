@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import _ from 'lodash'
-import { Button, Tabs } from 'antd'
+import { Tabs } from 'antd'
 import { connect } from 'dva'
 import { createForm } from 'rc-form'
 import styled from 'styled-components'
@@ -31,21 +31,14 @@ const Content = styled.div`
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
 `
-
-const Footer = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 10px 20px;
-  justify-content: flex-end;
-  align-items: center;
-`
-
 @connect(({ element }) => ({ ...element }))
 class PropsEditor extends PureComponent {
   handleCancel = () => {}
 
   handleUpdate = () => {
     this.props.form.validateFields(async (error, values) => {
+      const ele = this.props[this.props.editingId] || {}
+      const { id } = ele
       const { item = {} } = this.props
 
       const params = {}
@@ -54,7 +47,7 @@ class PropsEditor extends PureComponent {
         params[EditorHelper.getPropertyName(it)] = values[it]
       })
 
-      console.log('commit to', { ...item, ...params })
+      console.log('commit to', { values: { ...item, ...params }, id })
     })
     // NavigationService.dispatch('propsEditor/commit', this.props)
   }
@@ -67,7 +60,7 @@ class PropsEditor extends PureComponent {
       return null
     }
 
-    const { title = '组件', id, propList = [] } = ele
+    const { title = '组件', id, propList = [], values = {} } = ele
 
     console.log('props-editor render', ele)
 
@@ -88,8 +81,7 @@ class PropsEditor extends PureComponent {
             </TabPane>
             <TabPane tab="样式编辑" key="style-tabs">
               {propList.map(it => {
-                console.log('slider', it)
-                const defaultValue = ele[it.name] || it.defaultValue
+                const defaultValue = values[it.name] || it.defaultValue
                 const key = `${it.id}:${id}`
                 const itemProps = {
                   ...it,
@@ -107,14 +99,6 @@ class PropsEditor extends PureComponent {
             </TabPane>
           </Tabs>
         </Content>
-        <Footer>
-          <Button type="primary" onClick={this.handleUpdate}>
-            应用
-          </Button>
-          <Button style={{ marginLeft: '20px' }} onClick={this.handleCancel}>
-            取消
-          </Button>
-        </Footer>
       </Container>
     )
   }

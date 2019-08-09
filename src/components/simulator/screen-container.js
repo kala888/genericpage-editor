@@ -56,6 +56,8 @@ class ScreenContainer extends React.PureComponent {
   render() {
     const { scale, list = [], title } = this.props
 
+    console.log('render,list', list)
+
     return (
       <Container scaleTo={scale}>
         <WechatScreen>

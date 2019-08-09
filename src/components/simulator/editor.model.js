@@ -8,62 +8,63 @@ export default {
   namespace: 'editor',
   state: {
     scaleValues: [30, 50, 65, 75, 80, 90, 100],
-    scaleIndex: 2,
-    menuGroups: [],
-    screen: [],
     dashedEditing: false,
+    scaleIndex: 2,
+    pageList: [],
+    componentGroups: [],
   },
   effects: {
     *clearPage({ payload }, { put }) {
       console.log(payload)
-      yield put(createAction('saveToStore')({ screen: [] }))
+      yield put(createAction('page/saveScreen')([]))
       yield put(createAction('element/clear')())
     },
 
     *removeItem({ payload }, { put }) {
-      yield put(createAction('removeScreenItem')(payload))
+      yield put(createAction('page/removeScreenItem')(payload))
       yield put(createAction('element/removeItem')(payload))
     },
+
     *dragToScreen({ payload }, { put, select }) {
       const { source, destination } = payload
-      const currentState = yield select(state => state.editor)
-
-      console.log('从侧栏拖元素到simulator的screen', source)
-
-      const { menuGroups, screen } = currentState
-      const sourceGroup = _.find(menuGroups, { groupId: source.droppableId })
+      console.log('从侧栏拖元素到screen', source)
+      const { componentGroups } = yield select(state => state.editor)
+      const { screen } = yield select(state => state.page)
+      const sourceGroup = _.find(componentGroups, { groupId: source.droppableId })
       const { list: sourceList = [] } = sourceGroup
       const { list, item } = EditorHelper.copy(sourceList, screen, source, destination)
-      yield put(createAction('saveToStore')({ screen: list }))
+      yield put(createAction('page/saveScreen')(list))
       yield put(createAction('element/clickToEdit')(item))
     },
   },
   reducers: {
-    updateScreen(state, { payload }) {
-      console.log('updateScreen', payload)
-      return {
-        ...state,
-        screen: payload,
-      }
-    },
     save(state, { payload }) {
       const { statInPage, arrayMerge, ...resp } = payload
       const result = ModelTools.mergeState(state, resp, statInPage, arrayMerge)
 
+      // componentGroups 在左侧"页面编辑器"里显示可以使用的component
       const { componentList = [], componentGroupList = [], uiPropertyList } = result
-
       const groupedUiProperties = _.groupBy(uiPropertyList, it => it.component.id)
-      const enrichComp = componentList.map(it => ({
-        ...it,
-        propList: groupedUiProperties[it.id],
-      }))
-      const dataMap = _.groupBy(enrichComp, it => it.componentGroup.id)
-      const menuGroups = componentGroupList.map(group => ({
+      const components = {}
+      _.forEach(componentList, it => {
+        components[it.type] = {
+          ...it,
+          propList: groupedUiProperties[it.id],
+        }
+      })
+
+      const dataMap = _.groupBy(componentList, it => it.componentGroup.id)
+      const componentGroups = componentGroupList.map(group => ({
         ...group,
-        list: dataMap[group.id],
+        list: dataMap[group.id].map(it => components[it.type]),
       }))
 
-      return { ...state, menuGroups, ...result }
+      return {
+        ...state,
+        ...result,
+        componentGroups,
+        components,
+      }
     },
 
     saveToStore(state, { payload }) {
@@ -74,15 +75,6 @@ export default {
       return {
         ...state,
         scaleIndex: 2,
-      }
-    },
-
-    removeScreenItem(state, { payload }) {
-      console.log('从页面中移除', payload)
-      const screen = state.screen.filter(it => it.id !== payload.id)
-      return {
-        ...state,
-        screen,
       }
     },
 

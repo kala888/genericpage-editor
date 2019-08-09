@@ -29,31 +29,19 @@ export default {
     },
     clickToEdit(state, { payload }) {
       const { id } = payload
-
-      const item = _.merge(state[id], payload)
-
-      console.log('clickToEdit', item)
-
-      // 原始item， // 存储propList 用于生成属性编辑器
-      // {
-      //   id: uuid(),
-      //     componentType: 'carousel',
-      //   title: '跑马灯',
-      //   propList:[
-      //   {id:'1', type: 'slider', name: 'marginHorizontal', title: '左右边距' },
-      //   {id:'2', type: 'slider', name: 'marginVertical', title: '上下边距' },
-      // ]
-      // },
+      // const item = _.merge(state[id], payload)
+      console.log('clickToEdit', payload)
       return {
         ...state,
         editingId: id,
-        [id]: item,
+        [id]: payload,
       }
     },
-    updateProp(state, { payload }) {
+    saveValue(state, { payload }) {
       const { id } = payload
+      console.log('payload......', payload)
       const item = _.merge(state[id], payload)
-      console.log('update props', item)
+      console.log('save props value', item)
 
       return {
         ...state,

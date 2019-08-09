@@ -86,7 +86,7 @@ class DraggableElement extends React.PureComponent {
     const { item = {}, index, element = {} } = this.props
     const { id } = item
     const { editingId, dashedEditing } = element
-
+    console.log('....id', id, element[id], element)
     const ele = element[id] || item
 
     console.log('render darggable-ele', ele)

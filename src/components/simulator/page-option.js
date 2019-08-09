@@ -27,6 +27,8 @@ const Trash = styled.div`
   padding: 10px;
   margin-top: 40px;
   display: flex;
+  flex-direction: column;
+  font-size: 10px;
   justify-content: center;
   align-items: center;
   border: 2px solid ${({ isDraggingOver }) => (isDraggingOver ? 'red' : 'inherit')};
@@ -36,7 +38,7 @@ const Trash = styled.div`
 @connect(({ element }) => ({ element }))
 class PageOption extends React.PureComponent {
   handleSavePage = () => {
-    NavigationService.dispatch('page/saveScreenToPage')
+    NavigationService.dispatch('page/saveToRemote')
   }
 
   handleDashedEditing = () => {
@@ -87,6 +89,7 @@ class PageOption extends React.PureComponent {
           {(provided, snapshot) => (
             <Trash ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
               <Icon type="delete" style={{ fontSize: '50px' }} />
+              拖进来可以删除
               {provided.placeholder}
             </Trash>
           )}

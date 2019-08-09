@@ -10,9 +10,11 @@ class SliderEditor extends React.Component {
 
   updateProps = inputValue => {
     const { name, componentId } = this.props
-    NavigationService.dispatch('element/updateProp', {
+    NavigationService.dispatch('element/saveValue', {
       id: componentId,
-      [name]: inputValue,
+      values: {
+        [name]: inputValue,
+      },
     })
   }
 

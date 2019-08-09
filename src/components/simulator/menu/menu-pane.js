@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect } from 'dva'
 import styled from 'styled-components'
 import { Button, Collapse, Tabs } from 'antd'
-import GroupedMenu from './grouped-menu'
+import ComponentGroupCard from './component-group-card'
 import NewPagePopup from './new-page-popup'
-import MenuPageItem from './menu-page-item'
+import PageItem from './page-item'
 
 const Container = styled.div`
   border: 1px solid gainsboro;
@@ -35,25 +34,21 @@ const PageContent = styled(Content)`
 const { TabPane } = Tabs
 const { Panel } = Collapse
 
-@connect(({ page }) => ({ ...page }))
 class MenuPane extends React.PureComponent {
   state = {
     activeKey: 'pages',
   }
 
   handleTabClick = tab => {
-    console.log('asdfasdfasdf', tab)
     this.setState({ activeKey: tab })
   }
 
   switch2Editor = () => this.setState({ activeKey: 'editor' })
 
   render() {
-    const { scaleValue, menuGroups = [], pageList = [] } = this.props
+    const { scaleValue, componentGroups = [], pageList = [], projectId, editingPageId } = this.props
 
-    const { projectId, id } = this.props
-    const activePaneList = menuGroups.map(it => it.groupId)
-    console.log('activePaneList', activePaneList)
+    const activePaneList = componentGroups.map(it => it.groupId)
     return (
       <Container>
         <ScaleOption>
@@ -74,9 +69,9 @@ class MenuPane extends React.PureComponent {
             <PageContent>
               <NewPagePopup projectId={projectId} />
               {pageList.map(it => (
-                <MenuPageItem
+                <PageItem
                   key={it.id}
-                  isEditing={it.id === id}
+                  isEditing={it.id === editingPageId}
                   projectId={projectId}
                   page={it}
                   onItemDoubleClick={this.switch2Editor}
@@ -87,11 +82,11 @@ class MenuPane extends React.PureComponent {
           <TabPane tab="页面编辑器" key="editor">
             <Content>
               <Collapse defaultActiveKey={activePaneList} expandIconPosition="right">
-                {menuGroups.map(it => {
+                {componentGroups.map(it => {
                   const { title, groupId, list } = it
                   return (
                     <Panel key={groupId} header={title}>
-                      <GroupedMenu groupId={groupId} title={title} list={list} />
+                      <ComponentGroupCard groupId={groupId} list={list} />
                     </Panel>
                   )
                 })}
