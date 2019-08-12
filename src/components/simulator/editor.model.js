@@ -35,21 +35,27 @@ export default {
   effects: {
     *saveProject({ payload }, { put }) {
       // componentGroups 在左侧"页面编辑器"里显示可以使用的component
-      const { componentList = [], componentGroupList = [], uiPropertyList } = payload
+      const { componentList: tempList = [], componentGroupList = [], uiPropertyList } = payload
+      const componentList = _.uniqBy(tempList, 'componentType')
+
       const groupedUiProperties = _.groupBy(uiPropertyList, it => it.component.id)
       const components = {}
       _.forEach(componentList, it => {
-        components[it.type] = {
+        components[it.componentType] = {
           ...it,
           propList: groupedUiProperties[it.id],
         }
       })
 
       const dataMap = _.groupBy(componentList, it => it.componentGroup.id)
-      const componentGroups = componentGroupList.map(group => ({
-        ...group,
-        list: dataMap[group.id].map(it => components[it.type]),
-      }))
+      const componentGroups = componentGroupList.map(group => {
+        const groupedList = dataMap[group.id] || []
+        const list = groupedList.map(it => components[it.componentType])
+        return {
+          ...group,
+          list,
+        }
+      })
 
       yield put(
         createAction('save')({
@@ -63,14 +69,16 @@ export default {
     *savePage({ payload }, { put, select }) {
       const { content } = payload
       const editor = yield select(state => state.editor)
-      const components = parseAsObj(content, [])
-      const screen = components.map(it => {
-        const comp = editor.components[it.type] || {}
-        return {
+      const { components } = editor
+      const contentList = parseAsObj(content, [])
+      const screen = contentList.map(it => {
+        const comp = components[it.componentType] || {}
+        const result = {
           ...comp,
           ...it,
           values: it.values,
         }
+        return result
       })
       yield put(
         createAction('save')({
@@ -96,11 +104,10 @@ export default {
       const { title, brief, id } = page
       console.log('save screen to remote', screen, payload)
       const list = screen.map(comp => {
-        const { type } = comp
         const ele = element[comp.id] || {}
         return {
           id: comp.id,
-          type,
+          componentType: comp.componentType,
           values: ele.values,
         }
       })
@@ -117,12 +124,11 @@ export default {
     *dragToScreen({ payload }, { put, select }) {
       const { source, destination } = payload
       console.log('从侧栏拖元素到screen', source)
-      const { componentGroups, page = {} } = yield select(state => state.editor)
-      const { screen } = page
+      const { screen, componentGroups } = yield select(state => state.editor)
       const sourceGroup = _.find(componentGroups, { groupId: source.droppableId })
       const { list: sourceList = [] } = sourceGroup
       const { list, item } = EditorHelper.copy(sourceList, screen, source, destination)
-      yield put(createAction('page/saveScreen')(list))
+      yield put(createAction('saveScreen')(list))
       yield put(createAction('element/clickToEdit')(item))
     },
   },
