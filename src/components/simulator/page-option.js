@@ -38,7 +38,7 @@ const Trash = styled.div`
 @connect(({ element }) => ({ element }))
 class PageOption extends React.PureComponent {
   handleSavePage = () => {
-    NavigationService.dispatch('page/saveToRemote')
+    NavigationService.dispatch('editor/saveToRemote')
   }
 
   handleDashedEditing = () => {
@@ -52,7 +52,7 @@ class PageOption extends React.PureComponent {
       okText: '我确认，已慎重考虑过了',
       okType: 'danger',
       onOk() {
-        NavigationService.dispatch('editor/clearPage')
+        NavigationService.dispatch('editor/clearScreen')
       },
     })
   }

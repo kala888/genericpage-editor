@@ -59,8 +59,8 @@ const Left = styled(Pane)`
   width: 450px;
 `
 
-@connect(({ editor, page }) => ({ ...editor, page }))
-class SimulatorPage extends React.PureComponent {
+@connect(({ editor }) => ({ ...editor }))
+class EditorPage extends React.PureComponent {
   componentDidMount() {
     console.log(Config.api.FooterHome)
     NavigationService.view(Config.api.FooterHome)
@@ -124,10 +124,16 @@ class SimulatorPage extends React.PureComponent {
   }
 
   render() {
-    const { scaleValues, scaleIndex, componentGroups, page = {} } = this.props
-    const { pageList, displayName, id } = this.props
-
-    const { title, screen, id: pageId } = page
+    const {
+      scaleValues = 1,
+      scaleIndex = 1,
+      componentGroups,
+      screen,
+      page = {},
+      project = {},
+    } = this.props
+    const { pageList, displayName, id } = project
+    const { title, id: pageId } = page
 
     const scaleValue = scaleValues[scaleIndex]
     const scale = scaleValue / 100
@@ -162,4 +168,4 @@ class SimulatorPage extends React.PureComponent {
   }
 }
 
-export default SimulatorPage
+export default EditorPage
