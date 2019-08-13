@@ -30,7 +30,7 @@ const Page = styled.div`
   flex-direction: row;
   width: 100%;
   height: 1000px;
-  padding: 10px 80px 40px 80px;
+  //padding: 10px 80px 40px 80px;
   background-color: #fff;
 `
 

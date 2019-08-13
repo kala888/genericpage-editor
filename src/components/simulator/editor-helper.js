@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import uuid from 'uuid/v4'
 
 function getPropertyFormName({ name, componentId, id }) {
@@ -42,12 +43,59 @@ const move = (source, destination, droppableSource, droppableDestination) => {
   return result
 }
 
+function calcStyle(values = {}, customStyle = {}) {
+  const {
+    marginTop = 0,
+    marginRight = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+
+    paddingTop = 0,
+    paddingRight = 0,
+    paddingBottom = 0,
+    paddingLeft = 0,
+
+    opacity = 100,
+    height = 'auto',
+    width = '100%',
+    backgroundColor = 'transparent',
+    borderRadius = 0,
+    border = '1px solid gray',
+  } = values
+
+  const margin = `${withPx(marginTop)} ${withPx(marginRight)} ${withPx(marginBottom)} ${withPx(
+    marginLeft
+  )}`
+  const padding = `${withPx(paddingTop)} ${withPx(paddingRight)} ${withPx(paddingBottom)} ${withPx(
+    paddingLeft
+  )}`
+  const style = {
+    margin,
+    padding,
+    opacity: opacity / 100,
+    height,
+    width,
+    backgroundColor,
+    borderRadius: withPx(borderRadius),
+    border,
+    ...customStyle,
+  }
+  console.log('style for item', style)
+  return style
+}
+
+function withPx(value) {
+  const result = _.toNumber(value)
+  return _.isNaN(result) ? value : `${result}px`
+}
+
 const EditorHelper = {
   getPropertyFormName,
   getPropertyName,
   move,
   copy,
   reorder,
+  calcStyle,
 }
 
 export default EditorHelper

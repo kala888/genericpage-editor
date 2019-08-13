@@ -34,12 +34,13 @@ class Element extends React.Component {
   }
 
   render() {
-    const { componentType, values = {} } = this.props
+    const { componentType } = this.props
     const type = getComponentType(componentType)
     console.log('render Element', this.props)
-    const { marginVertical = 0, marginHorizontal = 0 } = values
+
+    console.log('carousel.....22', this.props.values)
     return (
-      <Container style={{ margin: `${marginVertical}px ${marginHorizontal}px` }}>
+      <Container>
         {type === 'carousel' && <EleCarousel {...this.props} />}
         {type === 'others' && <Unexcepted>{this.props.title}</Unexcepted>}
       </Container>

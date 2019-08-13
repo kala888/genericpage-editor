@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import EditorHelper from '../editor-helper'
 
 const Container = styled.div`
   height: 200px;
@@ -10,11 +11,14 @@ const Container = styled.div`
   align-items: center;
 `
 
-class EleCarousel extends PureComponent {
+// eslint-disable-next-line react/prefer-stateless-function
+class EleCarousel extends React.Component {
   render() {
-    const { title, border = '1px solid red' } = this.props
+    const { title } = this.props
+    const style = EditorHelper.calcStyle(this.props.values)
+    console.log('carousel.....', style)
 
-    return <Container style={{ border }}>{title}</Container>
+    return <Container style={style}>{title}</Container>
   }
 }
 

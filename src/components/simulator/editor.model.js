@@ -20,6 +20,23 @@ function parseAsObj(content, defaultValue) {
   return defaultValue
 }
 
+const commonPropList = [
+  { id: 'marginTop', title: '上外边距', name: 'marginTop' },
+  { id: 'marginBottom', title: '下外边距', name: 'marginBottom' },
+  { id: 'marginLeft', title: '左外边距', name: 'marginLeft' },
+  { id: 'marginRight', title: '右外边距', name: 'marginRight' },
+
+  { id: 'paddingTop', title: '上内边距', name: 'paddingTop' },
+  { id: 'paddingBottom', title: '下内边距', name: 'paddingBottom' },
+  { id: 'paddingLeft', title: '左内边距', name: 'paddingLeft' },
+  { id: 'paddingRight', title: '右内边距', name: 'paddingRight' },
+
+  { id: 'opacity', title: '透明度', type: 'slider', name: 'opacity' },
+  { id: 'borderRadius', title: '圆角', name: 'borderRadius' },
+  { id: 'height', title: '高度', name: 'height', defaultValue: 'Auto' },
+  { id: 'border', name: 'border', type: 'border' },
+]
+
 export default {
   namespace: 'editor',
   state: {
@@ -43,7 +60,7 @@ export default {
       _.forEach(componentList, it => {
         components[it.componentType] = {
           ...it,
-          propList: groupedUiProperties[it.id],
+          propList: _.concat(commonPropList, groupedUiProperties[it.id]),
         }
       })
 

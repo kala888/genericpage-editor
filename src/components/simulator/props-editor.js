@@ -6,6 +6,8 @@ import { createForm } from 'rc-form'
 import styled from 'styled-components'
 import InputNumberEditor from './common/input-number-editor'
 import EditorHelper from './editor-helper'
+import SliderEditor from './common/slider-editor'
+import BorderEditor from './common/border-editor'
 
 const { TabPane } = Tabs
 
@@ -31,6 +33,7 @@ const Content = styled.div`
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
 `
+
 @connect(({ element }) => ({ ...element }))
 class PropsEditor extends PureComponent {
   handleCancel = () => {}
@@ -92,7 +95,9 @@ class PropsEditor extends PureComponent {
                 }
                 return (
                   <div key={key} style={{ paddingBottom: '10px' }}>
-                    <InputNumberEditor {...itemProps} />
+                    {it.type === 'slider' && <SliderEditor {...itemProps} />}
+                    {it.type === 'border' && <BorderEditor {...itemProps} />}
+                    {!it.type && <InputNumberEditor {...itemProps} />}
                   </div>
                 )
               })}

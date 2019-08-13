@@ -1,4 +1,5 @@
 import React from 'react'
+import _ from 'lodash'
 import { Col, InputNumber, Row, Slider } from 'antd'
 import NavigationService from '../../../nice-router/navigation.service'
 import EditorHelper from '../editor-helper'
@@ -8,15 +9,19 @@ class SliderEditor extends React.Component {
     inputValue: null,
   }
 
-  updateProps = inputValue => {
-    const { name, componentId } = this.props
-    NavigationService.dispatch('element/saveValue', {
-      id: componentId,
-      values: {
-        [name]: inputValue,
-      },
-    })
-  }
+  updateProps = _.throttle(
+    inputValue => {
+      const { name, componentId } = this.props
+      NavigationService.dispatch('element/saveValue', {
+        id: componentId,
+        values: {
+          [name]: inputValue,
+        },
+      })
+    },
+    200,
+    { trailing: false }
+  )
 
   onChange = inputValue => {
     this.setState(
@@ -57,6 +62,8 @@ class SliderEditor extends React.Component {
               style={{ marginLeft: 16 }}
               onChange={this.onChange}
               size="small"
+              formatter={v => `${v}%`}
+              parser={v => v.replace('%', '')}
             />
           )}
         </Col>
