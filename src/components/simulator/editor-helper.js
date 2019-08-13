@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import uuid from 'uuid/v4'
+import omit from 'omit.js'
 
 function getPropertyFormName({ name, componentId, id }) {
   return `${name}:${id}:${componentId}`
@@ -60,7 +61,7 @@ function calcStyle(values = {}, customStyle = {}) {
     width = '100%',
     backgroundColor = 'transparent',
     borderRadius = 0,
-    border = '1px solid gray',
+    border = {},
   } = values
 
   const margin = `${withPx(marginTop)} ${withPx(marginRight)} ${withPx(marginBottom)} ${withPx(
@@ -69,6 +70,9 @@ function calcStyle(values = {}, customStyle = {}) {
   const padding = `${withPx(paddingTop)} ${withPx(paddingRight)} ${withPx(paddingBottom)} ${withPx(
     paddingLeft
   )}`
+
+  const borderStyle = omit(border, ['extra'])
+  console.log('borderStyle', borderStyle)
   const style = {
     margin,
     padding,
@@ -77,7 +81,7 @@ function calcStyle(values = {}, customStyle = {}) {
     width,
     backgroundColor,
     borderRadius: withPx(borderRadius),
-    border,
+    ...borderStyle,
     ...customStyle,
   }
   console.log('style for item', style)

@@ -1,41 +1,43 @@
 import React from 'react'
-import { Col, InputNumber, Row } from 'antd'
+import { Col, Icon, Input, InputNumber, Row, Select } from 'antd'
 import { SketchPicker } from 'react-color'
 import NavigationService from '../../../nice-router/navigation.service'
 import EditorHelper from '../editor-helper'
 
+const defaultSelectedColor = '#F5A623'
+const defaultColor = '#999'
+
+const { Option } = Select
+
 class BorderEditor extends React.Component {
-  state = {
-    inputValue: null,
-    color: '#fff',
-    showFlag: true,
+  constructor(props, context) {
+    super(props, context)
+    const {
+      defaultValue: {
+        extra = {
+          width: 1,
+          color: defaultColor,
+          type: 'solid',
+          left: true,
+          right: true,
+          top: true,
+          bottom: true,
+        },
+      } = {},
+    } = props
+    this.state = {
+      ...extra,
+    }
   }
 
-  updateProps = inputValue => {
-    const { name, componentId } = this.props
-    NavigationService.dispatch('element/saveValue', {
-      id: componentId,
-      values: {
-        [name]: inputValue,
-      },
-    })
-  }
-
-  onChange = inputValue => {
-    this.setState(
-      {
-        inputValue,
-      },
-      () => {
-        // form.setFieldsValue({ [name]: inputValue })
-        this.updateProps(inputValue)
-      }
-    )
+  onWidthChange = width => {
+    console.log('111', width)
+    this.setState({ width }, () => this.updateBorder())
   }
 
   handleChangeComplete = color => {
     if (color) {
-      this.setState({ color: color.hex })
+      this.setState({ color: color.hex }, () => this.updateBorder())
     }
   }
 
@@ -47,13 +49,44 @@ class BorderEditor extends React.Component {
     this.setState({ showFlag: false })
   }
 
+  onPositionChange = position => {
+    this.setState(pre => ({ [position]: !pre[position] }), () => this.updateBorder())
+  }
+
+  onTypeChange = option => {
+    this.setState({ type: option }, () => this.updateBorder())
+  }
+
+  updateBorder = () => {
+    const { width, color, type, left, right, top, bottom } = this.state
+    const result = {}
+    if (width > 0) {
+      const borderStyle = `${width}px ${type} ${color}`
+      result.borderLeft = left ? borderStyle : ''
+      result.borderRight = right ? borderStyle : ''
+      result.borderTop = top ? borderStyle : ''
+      result.borderBottom = bottom ? borderStyle : ''
+      result.extra = { width, color, type, left, right, top, bottom }
+
+      const { name, componentId } = this.props
+      NavigationService.dispatch('element/saveValue', {
+        id: componentId,
+        values: {
+          [name]: result,
+        },
+      })
+    }
+  }
+
   render() {
-    const { defaultValue = 0, form } = this.props
-    const value = this.state.inputValue || defaultValue
+    const { defaultValue = {}, form } = this.props
     const { getFieldDecorator } = form
     const name = EditorHelper.getPropertyFormName(this.props)
+    const { width, color, type, left, right, top, bottom } = this.state
     return (
-      <div>
+      <div style={{ marginTop: '20px' }}>
+        <Row style={{ color: '#999' }}>边框属性</Row>
+        {getFieldDecorator(name, { initialValue: JSON.stringify(defaultValue) })(<Input />)}
         <Row
           style={{
             display: 'flex',
@@ -65,9 +98,12 @@ class BorderEditor extends React.Component {
             边框宽度
           </Col>
           <Col span={16}>
-            {getFieldDecorator(name, {
-              initialValue: value,
-            })(<InputNumber style={{ marginLeft: 16 }} onChange={this.onChange} size="small" />)}
+            <InputNumber
+              style={{ marginLeft: 16 }}
+              onChange={this.onWidthChange}
+              size="small"
+              defaultValue={width}
+            />
           </Col>
         </Row>
         <Row
@@ -81,9 +117,17 @@ class BorderEditor extends React.Component {
             边框类型
           </Col>
           <Col span={16}>
-            {getFieldDecorator(name, {
-              initialValue: value,
-            })(<InputNumber style={{ marginLeft: 16 }} onChange={this.onChange} size="small" />)}
+            <Select
+              defaultValue={type}
+              style={{ width: 90, marginLeft: 16 }}
+              onChange={this.onTypeChange}
+              size="small"
+            >
+              <Option value="solid">实线</Option>
+              <Option value="dashed">虚线</Option>
+              <Option value="dotted">点状线</Option>
+              <Option value="double">双线</Option>
+            </Select>
           </Col>
         </Row>
         <Row
@@ -92,29 +136,28 @@ class BorderEditor extends React.Component {
             alignItems: 'center',
             paddingBottom: '10px',
           }}
-          onClick={this.showColorPane}
         >
-          <Col span={4} style={{ alignSelf: 'flex-end' }}>
-            边框颜色
-          </Col>
+          <Col span={4}>边框颜色</Col>
           <Col span={16}>
             <div
               style={{
                 padding: '5px',
                 background: '#fff',
-                borderRadius: '1px',
+                borderRadius: '3px',
                 boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
                 display: 'inline-block',
                 cursor: 'pointer',
+                marginLeft: '16px',
               }}
-              onClick={this.switchShowFlag}
             >
               <div
+                onClick={this.switchShowFlag}
                 style={{
                   width: '36px',
                   height: '14px',
-                  borderRadius: '2px',
-                  background: this.state.color,
+                  borderRadius: '4px',
+                  boxShadow: '0 0 0 0.3px rgba(0,0,0,.1)',
+                  background: color,
                 }}
               />
               {this.state.showFlag && (
@@ -130,7 +173,7 @@ class BorderEditor extends React.Component {
                     backgroundColor: 'white',
                   }}
                 >
-                  <SketchPicker color={this.state.color} onChange={this.handleChangeComplete} />
+                  <SketchPicker color={color} onChange={this.handleChangeComplete} />
                   <div
                     onClick={this.close}
                     style={{
@@ -138,6 +181,8 @@ class BorderEditor extends React.Component {
                       marginTop: '-30px',
                       fontSize: '12px',
                       padding: '5px',
+                      zIndex: 9999,
+                      fontWeight: '500',
                     }}
                   >
                     隐藏
@@ -150,6 +195,44 @@ class BorderEditor extends React.Component {
         <Row style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={4} style={{ alignSelf: 'flex-end' }}>
             边框位置
+          </Col>
+          <Col span={16} style={{ alignSelf: 'flex-end' }}>
+            <Icon
+              type="border-top"
+              style={{
+                fontSize: '25px',
+                marginLeft: '16px',
+                color: top ? defaultSelectedColor : defaultColor,
+              }}
+              onClick={() => this.onPositionChange('top')}
+            />
+            <Icon
+              type="border-right"
+              style={{
+                fontSize: '25px',
+                marginLeft: '16px',
+                color: right ? defaultSelectedColor : defaultColor,
+              }}
+              onClick={() => this.onPositionChange('right')}
+            />
+            <Icon
+              type="border-bottom"
+              style={{
+                fontSize: '25px',
+                marginLeft: '16px',
+                color: bottom ? defaultSelectedColor : defaultColor,
+              }}
+              onClick={() => this.onPositionChange('bottom')}
+            />
+            <Icon
+              type="border-left"
+              style={{
+                fontSize: '25px',
+                marginLeft: '16px',
+                color: left ? defaultSelectedColor : defaultColor,
+              }}
+              onClick={() => this.onPositionChange('left')}
+            />
           </Col>
         </Row>
       </div>
