@@ -8,7 +8,7 @@ import config from './config'
 console.log('1111')
 
 function readyWrapper(fn) {
-  return params => {
+  return (params) => {
     window.wx.ready(() => {
       fn(params)
     })

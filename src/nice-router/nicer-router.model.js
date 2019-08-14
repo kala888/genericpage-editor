@@ -30,7 +30,7 @@ export default {
 
   effects: {
     *retry(action, { put, select }) {
-      const { latestRoute } = yield select(state => state.app)
+      const { latestRoute } = yield select((state) => state.app)
       if (latestRoute) {
         yield put(createAction('route')(latestRoute))
       }

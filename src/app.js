@@ -6,7 +6,7 @@ import NiceRouter from './nice-router/nice-router'
 NiceRouter.start({ config: Config })
 
 export function render(oldRender) {
-  _.each(ModelCenter.models, it => {
+  _.each(ModelCenter.models, (it) => {
     window.g_app.model(it)
   })
   oldRender()

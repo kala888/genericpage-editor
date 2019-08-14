@@ -1,8 +1,7 @@
 import React from 'react'
-import { Col, Icon, Input, InputNumber, Row, Select } from 'antd'
+import { Col, Icon, InputNumber, Row, Select } from 'antd'
 import { SketchPicker } from 'react-color'
 import NavigationService from '../../../nice-router/navigation.service'
-import EditorHelper from '../editor-helper'
 
 const defaultSelectedColor = '#F5A623'
 const defaultColor = '#999'
@@ -30,30 +29,30 @@ class BorderEditor extends React.Component {
     }
   }
 
-  onWidthChange = width => {
+  onWidthChange = (width) => {
     console.log('111', width)
     this.setState({ width }, () => this.updateBorder())
   }
 
-  handleChangeComplete = color => {
+  handleChangeComplete = (color) => {
     if (color) {
       this.setState({ color: color.hex }, () => this.updateBorder())
     }
   }
 
   switchShowFlag = () => {
-    this.setState(pre => ({ showFlag: !pre.showFlag }))
+    this.setState((pre) => ({ showFlag: !pre.showFlag }))
   }
 
   close = () => {
     this.setState({ showFlag: false })
   }
 
-  onPositionChange = position => {
-    this.setState(pre => ({ [position]: !pre[position] }), () => this.updateBorder())
+  onPositionChange = (position) => {
+    this.setState((pre) => ({ [position]: !pre[position] }), () => this.updateBorder())
   }
 
-  onTypeChange = option => {
+  onTypeChange = (option) => {
     this.setState({ type: option }, () => this.updateBorder())
   }
 
@@ -66,7 +65,15 @@ class BorderEditor extends React.Component {
       result.borderRight = right ? borderStyle : ''
       result.borderTop = top ? borderStyle : ''
       result.borderBottom = bottom ? borderStyle : ''
-      result.extra = { width, color, type, left, right, top, bottom }
+      result.extra = {
+        width,
+        color,
+        type,
+        left,
+        right,
+        top,
+        bottom,
+      }
 
       const { name, componentId } = this.props
       NavigationService.dispatch('element/saveValue', {
@@ -79,14 +86,10 @@ class BorderEditor extends React.Component {
   }
 
   render() {
-    const { defaultValue = {}, form } = this.props
-    const { getFieldDecorator } = form
-    const name = EditorHelper.getPropertyFormName(this.props)
     const { width, color, type, left, right, top, bottom } = this.state
     return (
       <div style={{ marginTop: '20px' }}>
         <Row style={{ color: '#999' }}>边框属性</Row>
-        {getFieldDecorator(name, { initialValue: JSON.stringify(defaultValue) })(<Input />)}
         <Row
           style={{
             display: 'flex',
@@ -98,12 +101,7 @@ class BorderEditor extends React.Component {
             边框宽度
           </Col>
           <Col span={16}>
-            <InputNumber
-              style={{ marginLeft: 16 }}
-              onChange={this.onWidthChange}
-              size="small"
-              defaultValue={width}
-            />
+            <InputNumber style={{ marginLeft: 16 }} onChange={this.onWidthChange} size='small' defaultValue={width} />
           </Col>
         </Row>
         <Row
@@ -117,16 +115,11 @@ class BorderEditor extends React.Component {
             边框类型
           </Col>
           <Col span={16}>
-            <Select
-              defaultValue={type}
-              style={{ width: 90, marginLeft: 16 }}
-              onChange={this.onTypeChange}
-              size="small"
-            >
-              <Option value="solid">实线</Option>
-              <Option value="dashed">虚线</Option>
-              <Option value="dotted">点状线</Option>
-              <Option value="double">双线</Option>
+            <Select defaultValue={type} style={{ width: 90, marginLeft: 16 }} onChange={this.onTypeChange} size='small'>
+              <Option value='solid'>实线</Option>
+              <Option value='dashed'>虚线</Option>
+              <Option value='dotted'>点状线</Option>
+              <Option value='double'>双线</Option>
             </Select>
           </Col>
         </Row>
@@ -198,7 +191,7 @@ class BorderEditor extends React.Component {
           </Col>
           <Col span={16} style={{ alignSelf: 'flex-end' }}>
             <Icon
-              type="border-top"
+              type='border-top'
               style={{
                 fontSize: '25px',
                 marginLeft: '16px',
@@ -207,7 +200,7 @@ class BorderEditor extends React.Component {
               onClick={() => this.onPositionChange('top')}
             />
             <Icon
-              type="border-right"
+              type='border-right'
               style={{
                 fontSize: '25px',
                 marginLeft: '16px',
@@ -216,7 +209,7 @@ class BorderEditor extends React.Component {
               onClick={() => this.onPositionChange('right')}
             />
             <Icon
-              type="border-bottom"
+              type='border-bottom'
               style={{
                 fontSize: '25px',
                 marginLeft: '16px',
@@ -225,7 +218,7 @@ class BorderEditor extends React.Component {
               onClick={() => this.onPositionChange('bottom')}
             />
             <Icon
-              type="border-left"
+              type='border-left'
               style={{
                 fontSize: '25px',
                 marginLeft: '16px',

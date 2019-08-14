@@ -22,7 +22,7 @@ const Item = styled.div`
   margin-bottom: -1px;
   line-height: 1.5;
   background: #fff;
-  border: 1px ${props => (props.isDragging ? 'dashed #000' : 'solid #ddd')};
+  border: 1px ${(props) => (props.isDragging ? 'dashed #000' : 'solid #ddd')};
 
   &:hover {
     box-shadow: 0 0 5px deepskyblue;

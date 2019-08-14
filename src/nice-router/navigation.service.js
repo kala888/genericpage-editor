@@ -3,7 +3,7 @@ import qs from 'qs'
 import _ from 'lodash'
 import router from 'umi/router'
 
-const getActionUri = action => {
+const getActionUri = (action) => {
   let result = action
   if (_.isObject(action)) {
     const { linkToUrl, uri } = action

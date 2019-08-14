@@ -55,19 +55,19 @@ export default {
       const { componentList: tempList = [], componentGroupList = [], uiPropertyList } = payload
       const componentList = _.uniqBy(tempList, 'componentType')
 
-      const groupedUiProperties = _.groupBy(uiPropertyList, it => it.component.id)
+      const groupedUiProperties = _.groupBy(uiPropertyList, (it) => it.component.id)
       const components = {}
-      _.forEach(componentList, it => {
+      _.forEach(componentList, (it) => {
         components[it.componentType] = {
           ...it,
           propList: _.concat(commonPropList, groupedUiProperties[it.id]),
         }
       })
 
-      const dataMap = _.groupBy(componentList, it => it.componentGroup.id)
-      const componentGroups = componentGroupList.map(group => {
+      const dataMap = _.groupBy(componentList, (it) => it.componentGroup.id)
+      const componentGroups = componentGroupList.map((group) => {
         const groupedList = dataMap[group.id] || []
-        const list = groupedList.map(it => components[it.componentType])
+        const list = groupedList.map((it) => components[it.componentType])
         return {
           ...group,
           list,
@@ -85,10 +85,10 @@ export default {
 
     *savePage({ payload }, { put, select }) {
       const { content } = payload
-      const editor = yield select(state => state.editor)
+      const editor = yield select((state) => state.editor)
       const { components } = editor
       const contentList = parseAsObj(content, [])
-      const screen = contentList.map(it => {
+      const screen = contentList.map((it) => {
         const comp = components[it.componentType] || {}
         const result = {
           ...comp,
@@ -115,12 +115,12 @@ export default {
     },
 
     *saveToRemote({ payload }, { select }) {
-      const editor = yield select(state => state.editor)
+      const editor = yield select((state) => state.editor)
       const { page, project, screen } = editor
-      const element = yield select(state => state.element)
+      const element = yield select((state) => state.element)
       const { title, brief, id } = page
       console.log('save screen to remote', screen, payload)
-      const list = screen.map(comp => {
+      const list = screen.map((comp) => {
         const ele = element[comp.id] || {}
         return {
           id: comp.id,
@@ -141,7 +141,7 @@ export default {
     *dragToScreen({ payload }, { put, select }) {
       const { source, destination } = payload
       console.log('从侧栏拖元素到screen', source)
-      const { screen, componentGroups } = yield select(state => state.editor)
+      const { screen, componentGroups } = yield select((state) => state.editor)
       const sourceGroup = _.find(componentGroups, { groupId: source.droppableId })
       const { list: sourceList = [] } = sourceGroup
       const { list, item } = EditorHelper.copy(sourceList, screen, source, destination)
@@ -164,7 +164,7 @@ export default {
     },
     removeScreenItem(state, { payload }) {
       console.log('从页面中移除', payload)
-      const screen = state.screen.filter(it => it.id !== payload.id)
+      const screen = state.screen.filter((it) => it.id !== payload.id)
       return {
         ...state,
         screen,

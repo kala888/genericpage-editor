@@ -41,12 +41,12 @@ function enrichListOfEntity({ dataContainer, targetList = [], root = {} }, ...na
     console.log('data container is empty, and target is not empty, return itself')
     return targetList
   }
-  const doEnrichment = list => list.map(ref => refsEntityContainer[ref.id]).filter(it => it)
+  const doEnrichment = (list) => list.map((ref) => refsEntityContainer[ref.id]).filter((it) => it)
   if (names.length === 0) {
     return targetList ? doEnrichment(targetList) : []
   }
   const tempObj = {}
-  _.forEach(names, it => {
+  _.forEach(names, (it) => {
     const list = root[it] || []
     if (list.length > 0) {
       tempObj[it] = doEnrichment(list)
@@ -82,12 +82,4 @@ function formatBigNumber(number) {
   return _.toUpper(numeral(number).format('0a'))
 }
 
-export {
-  showFormError,
-  formatTime,
-  enrichListOfEntity,
-  formatRaito,
-  calcDuration,
-  formatBigNumber,
-  formatMoney,
-}
+export { showFormError, formatTime, enrichListOfEntity, formatRaito, calcDuration, formatBigNumber, formatMoney }

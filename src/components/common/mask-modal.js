@@ -77,12 +77,7 @@ export default class MaskModal extends React.PureComponent {
   }
 
   render() {
-    const {
-      imageUrl = defaultImageUrl,
-      style = {},
-      buttonStyle = {},
-      closeable = true,
-    } = this.props
+    const { imageUrl = defaultImageUrl, style = {}, buttonStyle = {}, closeable = true } = this.props
     return (
       <div style={style}>
         {!!this.props.children && (
@@ -108,7 +103,7 @@ export default class MaskModal extends React.PureComponent {
             }
           }}
         >
-          <img style={{ width: '100%' }} alt="" src={imageUrl} />
+          <img style={{ width: '100%' }} alt='' src={imageUrl} />
         </div>
       </div>
     )

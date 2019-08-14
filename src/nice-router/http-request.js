@@ -59,7 +59,7 @@ function showError({ xclass, data = {} }) {
   }
 
   if (messageList) {
-    const error = messageList.map(msg => msg.body).join('\n')
+    const error = messageList.map((msg) => msg.body).join('\n')
     toast(error)
     return
   }
@@ -104,7 +104,7 @@ const HttpRequest = {
     }
     const match = pathToRegexp.parse(uri)
     uri = pathToRegexp.compile(uri)(params)
-    match.forEach(item => {
+    match.forEach((item) => {
       if (item instanceof Object && item.name in cloneData) {
         delete cloneData[item.name]
       }

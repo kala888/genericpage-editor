@@ -8,7 +8,7 @@ import editor from '../components/simulator/editor.model'
 // const modelList = [app,home,'registry', 'article', 'artwork']
 
 const modelList = [niceRouterModel, 'home', elementModel, editor]
-const models = modelList.map(it => {
+const models = modelList.map((it) => {
   if (_.isString(it)) {
     return modelTools.createDefault(it)
   }

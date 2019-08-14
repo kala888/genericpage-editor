@@ -10,7 +10,7 @@ const replaceUrlPlaceholder = (pUri, params) => {
   let uri = pUri
   if (!_.isEmpty(params) || _.trim(pUri)) {
     lastParams = _.cloneDeep(params)
-    _.keys(params).forEach(key => {
+    _.keys(params).forEach((key) => {
       const tmp = `:${key}`
       if (tmp && uri.indexOf(tmp) > -1) {
         uri = uri.replace(tmp, params[key] || EMPTY_PARAMETER_TOKEN)

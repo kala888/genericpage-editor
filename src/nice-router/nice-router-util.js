@@ -5,7 +5,7 @@ export const LoadingType = {
   fetchingNext: 3,
 }
 
-export const createAction = type => payload => ({ type, payload })
+export const createAction = (type) => (payload) => ({ type, payload })
 export const noop = () => {}
 
-export const sleep = async longTime => new Promise(resolve => setTimeout(resolve, longTime))
+export const sleep = async (longTime) => new Promise((resolve) => setTimeout(resolve, longTime))

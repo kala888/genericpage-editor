@@ -42,7 +42,7 @@ LocalCache.saveBackendRouter = async (uri, page) => {
 }
 
 // 后端路由缓存
-LocalCache.getCachedPage = async uri => {
+LocalCache.getCachedPage = async (uri) => {
   const key = getPageKeyByUri(uri)
   console.log('keykeykeykeykey', key)
   const pageName = await StorageTools.get(key)

@@ -6,7 +6,7 @@ const CACHE_PREFIX = 'cachestore-'
 const CACHE_EXPIRATION_PREFIX = 'cacheexpiration-'
 const EXPIRY_UNITS = 60 * 1000
 
-const shortKey = key => (key.length > 100 ? md5(key) : key)
+const shortKey = (key) => (key.length > 100 ? md5(key) : key)
 // const fail = () => Promise.reject(null)
 
 const getKeys = _.memoize((key = '') => {
@@ -68,9 +68,7 @@ const StorageTools = {
 
   async flush() {
     const keys = await AsyncStorage.getAllKeys()
-    const allKeys = keys.filter(
-      key => key.indexOf(CACHE_PREFIX) === 0 || key.indexOf(CACHE_EXPIRATION_PREFIX) === 0
-    )
+    const allKeys = keys.filter((key) => key.indexOf(CACHE_PREFIX) === 0 || key.indexOf(CACHE_EXPIRATION_PREFIX) === 0)
     const result = await AsyncStorage.multiRemove(allKeys)
     return result
   },
@@ -79,9 +77,7 @@ const StorageTools = {
     const keys = await AsyncStorage.getAllKeys()
 
     const allKeys = keys.filter(
-      key =>
-        key.indexOf(`${CACHE_PREFIX}${prefix}`) === 0 ||
-        key.indexOf(`${CACHE_EXPIRATION_PREFIX}${prefix}`) === 0
+      (key) => key.indexOf(`${CACHE_PREFIX}${prefix}`) === 0 || key.indexOf(`${CACHE_EXPIRATION_PREFIX}${prefix}`) === 0
     )
     await AsyncStorage.multiRemove(allKeys)
   },
@@ -89,7 +85,7 @@ const StorageTools = {
   async flushExpired() {
     const keys = await AsyncStorage.getAllKeys()
 
-    keys.forEach(async key => {
+    keys.forEach(async (key) => {
       if (key.indexOf(CACHE_EXPIRATION_PREFIX) === 0) {
         const exprKey = key
         const expiry = await AsyncStorage.getItem(exprKey)

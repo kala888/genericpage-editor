@@ -65,7 +65,7 @@ class DraggableElement extends React.PureComponent {
     NavigationService.dispatch('element/clickToEdit', this.props.item)
   }
 
-  handleRemove = e => {
+  handleRemove = (e) => {
     if (e.stopPropagation) {
       e.stopPropagation()
     }
@@ -107,7 +107,7 @@ class DraggableElement extends React.PureComponent {
             <Element {...ele} />
             <Options isEditing={isEditing}>
               <OptionAction onClick={this.handleRemove}>删除</OptionAction>
-              <Icon style={{ marginLeft: '5px' }} type="setting" spin />
+              <Icon style={{ marginLeft: '5px' }} type='setting' spin />
             </Options>
           </Container>
         )}

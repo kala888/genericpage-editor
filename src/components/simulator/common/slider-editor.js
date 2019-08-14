@@ -10,7 +10,7 @@ class SliderEditor extends React.Component {
   }
 
   updateProps = _.throttle(
-    inputValue => {
+    (inputValue) => {
       const { name, componentId } = this.props
       NavigationService.dispatch('element/saveValue', {
         id: componentId,
@@ -23,7 +23,7 @@ class SliderEditor extends React.Component {
     { trailing: false }
   )
 
-  onChange = inputValue => {
+  onChange = (inputValue) => {
     this.setState(
       {
         inputValue,
@@ -45,12 +45,7 @@ class SliderEditor extends React.Component {
       <Row style={{ display: 'flex', alignItems: 'center' }}>
         <Col span={4}>{title}</Col>
         <Col span={12}>
-          <Slider
-            min={min}
-            max={max}
-            onChange={this.onChange}
-            value={typeof value === 'number' ? value : 0}
-          />
+          <Slider min={min} max={max} onChange={this.onChange} value={typeof value === 'number' ? value : 0} />
         </Col>
         <Col span={4}>
           {getFieldDecorator(name, {
@@ -61,9 +56,9 @@ class SliderEditor extends React.Component {
               max={max}
               style={{ marginLeft: 16 }}
               onChange={this.onChange}
-              size="small"
-              formatter={v => `${v}%`}
-              parser={v => v.replace('%', '')}
+              size='small'
+              formatter={(v) => `${v}%`}
+              parser={(v) => v.replace('%', '')}
             />
           )}
         </Col>

@@ -55,10 +55,10 @@ export default class CountDown extends React.PureComponent {
         style={{ alignSelf: 'center', marginTop: -5 }}
         onClick={this.onPress}
         disabled={this.state.disabled}
-        className="btn_extra"
-        size="small"
+        className='btn_extra'
+        size='small'
       >
-        <div className="grey f14">{btnText}</div>
+        <div className='grey f14'>{btnText}</div>
       </Button>
     )
   }

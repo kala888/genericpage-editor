@@ -60,22 +60,12 @@ class NewPagePopup extends PureComponent {
     }
     return (
       <Container>
-        <Button
-          type="dashed"
-          block
-          onClick={this.showNewPagePopup}
-          style={{ backgroundColor: 'transparent' }}
-        >
+        <Button type='dashed' block onClick={this.showNewPagePopup} style={{ backgroundColor: 'transparent' }}>
           + 新建页面
         </Button>
-        <Modal
-          visible={this.state.visible}
-          title="新建页面"
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-        >
+        <Modal visible={this.state.visible} title='新建页面' onOk={this.handleOk} onCancel={this.handleCancel}>
           <Form {...formItemLayout}>
-            <Form.Item label="页面标题">
+            <Form.Item label='页面标题'>
               {getFieldDecorator('title', {
                 rules: [
                   {
@@ -84,10 +74,10 @@ class NewPagePopup extends PureComponent {
                     message: '标题最少1个字，最多8个字',
                   },
                 ],
-              })(<Input placeholder="页面标题" />)}
+              })(<Input placeholder='页面标题' />)}
             </Form.Item>
 
-            <Form.Item label="提示语">
+            <Form.Item label='提示语'>
               {getFieldDecorator('brief', {
                 rules: [
                   {
@@ -95,10 +85,10 @@ class NewPagePopup extends PureComponent {
                     message: '提示语，最多20个字',
                   },
                 ],
-              })(<Input placeholder="不会展示到实际页面上，只是用来辅助记忆的" />)}
+              })(<Input placeholder='不会展示到实际页面上，只是用来辅助记忆的' />)}
             </Form.Item>
 
-            <Form.Item label="快捷可选操作" style={{ margin: '20px' }}>
+            <Form.Item label='快捷可选操作' style={{ margin: '20px' }}>
               {getFieldDecorator('hasPopup', {})(<Checkbox>弹出框</Checkbox>)}
               {getFieldDecorator('hasFab', {})(<Checkbox>浮动按钮</Checkbox>)}
               {getFieldDecorator('hasForm', {})(<Checkbox>表单页面</Checkbox>)}

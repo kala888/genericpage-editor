@@ -39,7 +39,7 @@ class MenuPane extends React.PureComponent {
     activeKey: 'pages',
   }
 
-  handleTabClick = tab => {
+  handleTabClick = (tab) => {
     this.setState({ activeKey: tab })
   }
 
@@ -48,27 +48,27 @@ class MenuPane extends React.PureComponent {
   render() {
     const { scaleValue, componentGroups = [], pageList = [], projectId, editingPageId } = this.props
 
-    const activePaneList = componentGroups.map(it => it.groupId)
+    const activePaneList = componentGroups.map((it) => it.groupId)
     return (
       <Container>
         <ScaleOption>
-          <div size="small">{`${scaleValue}%`}</div>
-          <Button size="small" onClick={() => this.handleScale(false)}>
+          <div size='small'>{`${scaleValue}%`}</div>
+          <Button size='small' onClick={() => this.handleScale(false)}>
             放大
           </Button>
-          <Button size="small" onClick={() => this.handleScale(true)}>
+          <Button size='small' onClick={() => this.handleScale(true)}>
             缩小
           </Button>
-          <Button size="small" onClick={this.handleResetScale}>
+          <Button size='small' onClick={this.handleResetScale}>
             重置大小
           </Button>
         </ScaleOption>
 
-        <Tabs type="card" activeKey={this.state.activeKey} onTabClick={this.handleTabClick}>
-          <TabPane tab="页面" key="pages">
+        <Tabs type='card' activeKey={this.state.activeKey} onTabClick={this.handleTabClick}>
+          <TabPane tab='页面' key='pages'>
             <PageContent>
               <NewPagePopup projectId={projectId} />
-              {pageList.map(it => (
+              {pageList.map((it) => (
                 <PageItem
                   key={it.id}
                   isEditing={it.id === editingPageId}
@@ -79,10 +79,10 @@ class MenuPane extends React.PureComponent {
               ))}
             </PageContent>
           </TabPane>
-          <TabPane tab="页面编辑器" key="editor">
+          <TabPane tab='页面编辑器' key='editor'>
             <Content>
-              <Collapse defaultActiveKey={activePaneList} expandIconPosition="right">
-                {componentGroups.map(it => {
+              <Collapse defaultActiveKey={activePaneList} expandIconPosition='right'>
+                {componentGroups.map((it) => {
                   const { title, groupId, list } = it
                   return (
                     <Panel key={groupId} header={title}>

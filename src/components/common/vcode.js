@@ -50,17 +50,17 @@ export default class VCode extends PureComponent {
     return (
       <InputItem
         maxLength={6}
-        size="large"
-        type="digit"
-        placeholder="请输入6位验证码"
+        size='large'
+        type='digit'
+        placeholder='请输入6位验证码'
         extra={
           <Button
-            className="btn_extra"
+            className='btn_extra'
             disabled={count}
             style={{
               marginTop: -5,
             }}
-            size="small"
+            size='small'
             onClick={this.sendSMSCode}
           >
             {message}

@@ -74,11 +74,11 @@ class EditorPage extends React.PureComponent {
     NavigationService.dispatch('editor/resetScale')
   }
 
-  onDragUpdate = result => {
+  onDragUpdate = (result) => {
     console.log('result  onDragUpdate', result)
   }
 
-  onDragEnd = result => {
+  onDragEnd = (result) => {
     const { source, destination, draggableId } = result
 
     if (_.isEmpty(this.props.page)) {
@@ -124,14 +124,7 @@ class EditorPage extends React.PureComponent {
   }
 
   render() {
-    const {
-      scaleValues = 1,
-      scaleIndex = 1,
-      componentGroups,
-      screen,
-      page = {},
-      project = {},
-    } = this.props
+    const { scaleValues = 1, scaleIndex = 1, componentGroups, screen, page = {}, project = {} } = this.props
     const { pageList, displayName, id } = project
     const { title, id: pageId } = page
 

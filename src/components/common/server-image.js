@@ -53,6 +53,6 @@ export default class ServerImage extends React.PureComponent {
         url = loadServerImage(uri)
     }
 
-    return <img alt="doublechain" {...others} src={url} />
+    return <img alt='doublechain' {...others} src={url} />
   }
 }

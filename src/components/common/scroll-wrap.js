@@ -22,11 +22,11 @@ class ScrollWrap extends PureComponent {
         style={{ overflow: 'hidden', height }}
         id={wrapId}
         className={wrapClass}
-        ref={ref => {
+        ref={(ref) => {
           this.myRef = ref
         }}
       >
-        <div className="wrap">{children}</div>
+        <div className='wrap'>{children}</div>
       </div>
     )
   }

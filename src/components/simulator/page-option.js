@@ -85,10 +85,10 @@ class PageOption extends React.PureComponent {
           </Button>
         </Item>
 
-        <Droppable droppableId="trash">
+        <Droppable droppableId='trash'>
           {(provided, snapshot) => (
             <Trash ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
-              <Icon type="delete" style={{ fontSize: '50px' }} />
+              <Icon type='delete' style={{ fontSize: '50px' }} />
               拖进来可以删除
               {provided.placeholder}
             </Trash>

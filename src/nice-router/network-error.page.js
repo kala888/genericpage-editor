@@ -11,7 +11,7 @@ export default class NetworkErrorPage extends React.PureComponent {
   render() {
     return (
       <div>
-        <img alt="" src={networkImage} />
+        <img alt='' src={networkImage} />
         点我刷新
       </div>
     )

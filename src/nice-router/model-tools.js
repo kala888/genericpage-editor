@@ -38,7 +38,7 @@ function mergeState(preState = {}, newState = {}, doMerge = false, arrayMerge = 
   return result
 }
 
-const createDefault = namespace => ({
+const createDefault = (namespace) => ({
   namespace,
   state: {},
   effects: {},

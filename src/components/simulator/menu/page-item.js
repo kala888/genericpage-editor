@@ -46,7 +46,7 @@ class PageItem extends React.PureComponent {
     })
   }
 
-  showQRCode = e => {
+  showQRCode = (e) => {
     console.log(e)
   }
 
@@ -58,7 +58,7 @@ class PageItem extends React.PureComponent {
     })
   }
 
-  handleClick = e => {
+  handleClick = (e) => {
     if (!this.delayedClick) {
       this.delayedClick = _.debounce(this.doClick, 500)
     }
@@ -95,11 +95,11 @@ class PageItem extends React.PureComponent {
     return (
       <Container onClick={this.handleClick} isEditing={isEditing}>
         <Title>{title}</Title>
-        <Options className="option">
-          <Button size="small" shape="circle" icon="setting" onClick={this.openEditPagePopup} />
-          <Button size="small" shape="circle" icon="copy" onClick={this.handleCopyPage} />
-          <Button size="small" shape="circle" icon="qrcode" onClick={this.showQRCode} />
-          <Button size="small" shape="circle" icon="delete" onClick={this.removePage} />
+        <Options className='option'>
+          <Button size='small' shape='circle' icon='setting' onClick={this.openEditPagePopup} />
+          <Button size='small' shape='circle' icon='copy' onClick={this.handleCopyPage} />
+          <Button size='small' shape='circle' icon='qrcode' onClick={this.showQRCode} />
+          <Button size='small' shape='circle' icon='delete' onClick={this.removePage} />
         </Options>
       </Container>
     )

@@ -64,12 +64,8 @@ function calcStyle(values = {}, customStyle = {}) {
     border = {},
   } = values
 
-  const margin = `${withPx(marginTop)} ${withPx(marginRight)} ${withPx(marginBottom)} ${withPx(
-    marginLeft
-  )}`
-  const padding = `${withPx(paddingTop)} ${withPx(paddingRight)} ${withPx(paddingBottom)} ${withPx(
-    paddingLeft
-  )}`
+  const margin = `${withPx(marginTop)} ${withPx(marginRight)} ${withPx(marginBottom)} ${withPx(marginLeft)}`
+  const padding = `${withPx(paddingTop)} ${withPx(paddingRight)} ${withPx(paddingBottom)} ${withPx(paddingLeft)}`
 
   const borderStyle = omit(border, ['extra'])
   console.log('borderStyle', borderStyle)

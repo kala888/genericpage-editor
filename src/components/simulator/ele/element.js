@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import EleCarousel from './ele-carousel'
 import NavigationService from '../../../nice-router/navigation.service'
+import EditorHelper from '../editor-helper'
 
 const Container = styled.div`
   width: 100%;
@@ -23,7 +24,7 @@ const Unexcepted = styled.div`
 const RegistryElements = ['carousel']
 
 function getComponentType(componentType) {
-  return _.findIndex(RegistryElements, it => it === componentType) > -1 ? componentType : 'others'
+  return _.findIndex(RegistryElements, (it) => it === componentType) > -1 ? componentType : 'others'
 }
 
 class Element extends React.Component {
@@ -37,10 +38,10 @@ class Element extends React.Component {
     const { componentType } = this.props
     const type = getComponentType(componentType)
     console.log('render Element', this.props)
+    const style = EditorHelper.calcStyle(this.props.values)
 
-    console.log('carousel.....22', this.props.values)
     return (
-      <Container>
+      <Container style={style}>
         {type === 'carousel' && <EleCarousel {...this.props} />}
         {type === 'others' && <Unexcepted>{this.props.title}</Unexcepted>}
       </Container>

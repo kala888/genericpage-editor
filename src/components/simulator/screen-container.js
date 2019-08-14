@@ -62,10 +62,10 @@ class ScreenContainer extends React.PureComponent {
       <Container scaleTo={scale}>
         <WechatScreen>
           <WechatScreenHeader>
-            <img alt="wechat-header" style={{ width: '100%' }} src={wechatHeaderImg} />
+            <img alt='wechat-header' style={{ width: '100%' }} src={wechatHeaderImg} />
             <ScreenHeaderText>{title}</ScreenHeaderText>
           </WechatScreenHeader>
-          <Droppable droppableId="screen">
+          <Droppable droppableId='screen'>
             {(provided, snapshot) => (
               <WechatScreenBody ref={provided.innerRef} isDraggingOver={snapshot.isDraggingOver}>
                 {list.map((item, index) => (

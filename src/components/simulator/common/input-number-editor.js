@@ -8,7 +8,7 @@ class InputNumberEditor extends React.Component {
     inputValue: null,
   }
 
-  updateProps = inputValue => {
+  updateProps = (inputValue) => {
     const { name, componentId } = this.props
     NavigationService.dispatch('element/saveValue', {
       id: componentId,
@@ -18,7 +18,7 @@ class InputNumberEditor extends React.Component {
     })
   }
 
-  onChange = inputValue => {
+  onChange = (inputValue) => {
     this.setState(
       {
         inputValue,
@@ -49,7 +49,7 @@ class InputNumberEditor extends React.Component {
               max={maxLength}
               style={{ marginLeft: 16 }}
               onChange={this.onChange}
-              size="small"
+              size='small'
             />
           )}
         </Col>

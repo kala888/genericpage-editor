@@ -46,7 +46,7 @@ class PropsEditor extends PureComponent {
 
       const params = {}
       // eslint-disable-next-line array-callback-return
-      _.keys(values).map(it => {
+      _.keys(values).map((it) => {
         params[EditorHelper.getPropertyName(it)] = values[it]
       })
 
@@ -78,12 +78,12 @@ class PropsEditor extends PureComponent {
         </Title>
 
         <Content>
-          <Tabs defaultActiveKey="style-tabs">
-            <TabPane tab="基本信息" key="base-info">
+          <Tabs defaultActiveKey='style-tabs'>
+            <TabPane tab='基本信息' key='base-info'>
               基本信息，没想好放啥
             </TabPane>
-            <TabPane tab="样式编辑" key="style-tabs">
-              {propList.map(it => {
+            <TabPane tab='样式编辑' key='style-tabs'>
+              {propList.map((it) => {
                 const defaultValue = values[it.name] || it.defaultValue
                 const key = `${it.id}:${id}`
                 const itemProps = {
