@@ -4,53 +4,56 @@
 import React from 'react'
 
 import {
-  loadTinyImg,
-  loadSmallImg,
+  loadLargeImg,
   loadMiddleImg,
   loadNormalImg,
-  loadLargeImg,
-  loadXLargeImg,
   loadOriginImg,
   loadServerImage,
+  loadSmallImg,
+  loadTinyImg,
   loadWaterfallImg,
+  loadXLargeImg,
 } from '../../utils/image-tools'
 
 export default class ServerImage extends React.PureComponent {
   render() {
-    const { uri = '', size = 'normal', ...others } = this.props
-    if (uri.length === 0) {
+    const { uri, src, size = 'normal', ...others } = this.props
+
+    let url = uri || src || ''
+    console.log('iiiiiii', url)
+
+    if (url.length === 0) {
       return null
     }
     // uri="https://xubai-public.oss-cn-beijing.aliyuncs.com/upload/MoyiUser/MU101354/2018/1026/072552_9293183.4288x2848.jpg"
 
-    let url = uri
     switch (size) {
       case 'tiny':
-        url = loadTinyImg(uri)
+        url = loadTinyImg(url)
         break
       case 'small':
-        url = loadSmallImg(uri)
+        url = loadSmallImg(url)
         break
       case 'middle':
-        url = loadMiddleImg(uri)
+        url = loadMiddleImg(url)
         break
       case 'normal':
-        url = loadNormalImg(uri)
+        url = loadNormalImg(url)
         break
       case 'large':
-        url = loadLargeImg(uri)
+        url = loadLargeImg(url)
         break
       case 'xlarge':
-        url = loadXLargeImg(uri)
+        url = loadXLargeImg(url)
         break
       case 'origin':
-        url = loadOriginImg(uri)
+        url = loadOriginImg(url)
         break
       case 'waterfall':
-        url = loadWaterfallImg(uri)
+        url = loadWaterfallImg(url)
         break
       default:
-        url = loadServerImage(uri)
+        url = loadServerImage(url)
     }
 
     return <img alt='doublechain' {...others} src={url} />

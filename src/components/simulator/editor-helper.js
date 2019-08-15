@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import uuid from 'uuid/v4'
-import omit from 'omit.js'
+import NavigationService from '../../nice-router/navigation.service'
 
 function getPropertyFormName({ name, componentId, id }) {
   return `${name}:${id}:${componentId}`
@@ -67,14 +67,14 @@ function calcStyle(values = {}, customStyle = {}) {
   const margin = `${withPx(marginTop)} ${withPx(marginRight)} ${withPx(marginBottom)} ${withPx(marginLeft)}`
   const padding = `${withPx(paddingTop)} ${withPx(paddingRight)} ${withPx(paddingBottom)} ${withPx(paddingLeft)}`
 
-  const borderStyle = omit(border, ['extra'])
+  const borderStyle = _.omit(border, ['extra'])
   console.log('borderStyle', borderStyle)
   const style = {
     margin,
     padding,
     opacity: opacity / 100,
-    height,
-    width,
+    height: withPx(height),
+    width: withPx(width),
     backgroundColor,
     borderRadius: withPx(borderRadius),
     ...borderStyle,
@@ -89,6 +89,33 @@ function withPx(value) {
   return _.isNaN(result) ? value : `${result}px`
 }
 
+const updateStyle = _.throttle(
+  ({ name, componentId, value }) => {
+    NavigationService.dispatch('element/saveValue', {
+      id: componentId,
+      styleValues: {
+        [name]: value,
+      },
+    })
+  },
+  100,
+  { trailing: false }
+)
+
+const updateValues = _.throttle(
+  ({ name, componentId, value }) => {
+    console.log('save values', name, componentId, value)
+    NavigationService.dispatch('element/saveValue', {
+      id: componentId,
+      values: {
+        [name]: value,
+      },
+    })
+  },
+  100,
+  { trailing: false }
+)
+
 const EditorHelper = {
   getPropertyFormName,
   getPropertyName,
@@ -96,6 +123,8 @@ const EditorHelper = {
   copy,
   reorder,
   calcStyle,
+  updateStyle,
+  updateValues,
 }
 
 export default EditorHelper

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Col, InputNumber, Row } from 'antd'
-import NavigationService from '../../../nice-router/navigation.service'
 import EditorHelper from '../editor-helper'
 
 class InputNumberEditor extends React.Component {
@@ -8,24 +7,15 @@ class InputNumberEditor extends React.Component {
     inputValue: null,
   }
 
-  updateProps = (inputValue) => {
-    const { name, componentId } = this.props
-    NavigationService.dispatch('element/saveValue', {
-      id: componentId,
-      values: {
-        [name]: inputValue,
-      },
-    })
-  }
-
   onChange = (inputValue) => {
+    const { name, componentId } = this.props
     this.setState(
       {
         inputValue,
       },
       () => {
         // form.setFieldsValue({ [name]: inputValue })
-        this.updateProps(inputValue)
+        EditorHelper.updateStyle({ name, componentId, value: inputValue })
       }
     )
   }

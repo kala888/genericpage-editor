@@ -8,6 +8,9 @@ import InputNumberEditor from './common/input-number-editor'
 import EditorHelper from './editor-helper'
 import SliderEditor from './common/slider-editor'
 import BorderEditor from './common/border-editor'
+import ColorEditor from './common/color-editor'
+import ImageEditor from './common/image-editor'
+import SwitchEditor from './common/switch-editor'
 
 const { TabPane } = Tabs
 
@@ -63,7 +66,7 @@ class PropsEditor extends PureComponent {
       return null
     }
 
-    const { title = '组件', id, propList = [], values = {} } = ele
+    const { title = '组件', id, propList = [], styleValues = {}, values = {}, properties = [] } = ele
 
     console.log('props-editor render', ele)
 
@@ -80,11 +83,27 @@ class PropsEditor extends PureComponent {
         <Content>
           <Tabs defaultActiveKey='style-tabs'>
             <TabPane tab='基本信息' key='base-info'>
-              基本信息，没想好放啥
+              {properties.map((it) => {
+                console.log('...it', it)
+                const defaultValue = values[it.name] || it.defaultValue
+                const key = `${it.id}:${id}`
+                const itemProps = {
+                  ...it,
+                  defaultValue,
+                  componentId: id,
+                  key,
+                }
+                return (
+                  <div key={it.id}>
+                    {it.type === 'image' && <ImageEditor {...itemProps} />}
+                    {it.type === 'switch' && <SwitchEditor {...itemProps} />}
+                  </div>
+                )
+              })}
             </TabPane>
             <TabPane tab='样式编辑' key='style-tabs'>
               {propList.map((it) => {
-                const defaultValue = values[it.name] || it.defaultValue
+                const defaultValue = styleValues[it.name] || it.defaultValue
                 const key = `${it.id}:${id}`
                 const itemProps = {
                   ...it,
@@ -97,6 +116,7 @@ class PropsEditor extends PureComponent {
                   <div key={key} style={{ paddingBottom: '10px' }}>
                     {it.type === 'slider' && <SliderEditor {...itemProps} />}
                     {it.type === 'border' && <BorderEditor {...itemProps} />}
+                    {it.type === 'color' && <ColorEditor {...itemProps} />}
                     {!it.type && <InputNumberEditor {...itemProps} />}
                   </div>
                 )

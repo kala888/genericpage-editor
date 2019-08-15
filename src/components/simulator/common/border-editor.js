@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, Icon, InputNumber, Row, Select } from 'antd'
-import { SketchPicker } from 'react-color'
-import NavigationService from '../../../nice-router/navigation.service'
+import ColorEditor from './color-editor'
+import EditorHelper from '../editor-helper'
 
 const defaultSelectedColor = '#F5A623'
 const defaultColor = '#999'
@@ -35,9 +35,7 @@ class BorderEditor extends React.Component {
   }
 
   handleChangeComplete = (color) => {
-    if (color) {
-      this.setState({ color: color.hex }, () => this.updateBorder())
-    }
+    this.setState({ color }, () => this.updateBorder())
   }
 
   switchShowFlag = () => {
@@ -59,30 +57,23 @@ class BorderEditor extends React.Component {
   updateBorder = () => {
     const { width, color, type, left, right, top, bottom } = this.state
     const result = {}
-    if (width > 0) {
-      const borderStyle = `${width}px ${type} ${color}`
-      result.borderLeft = left ? borderStyle : ''
-      result.borderRight = right ? borderStyle : ''
-      result.borderTop = top ? borderStyle : ''
-      result.borderBottom = bottom ? borderStyle : ''
-      result.extra = {
-        width,
-        color,
-        type,
-        left,
-        right,
-        top,
-        bottom,
-      }
-
-      const { name, componentId } = this.props
-      NavigationService.dispatch('element/saveValue', {
-        id: componentId,
-        values: {
-          [name]: result,
-        },
-      })
+    const borderStyle = `${width}px ${type} ${color}`
+    result.borderLeft = left && width > 0 ? borderStyle : ''
+    result.borderRight = right && width > 0 ? borderStyle : ''
+    result.borderTop = top && width > 0 ? borderStyle : ''
+    result.borderBottom = bottom && width > 0 ? borderStyle : ''
+    result.extra = {
+      width,
+      color,
+      type,
+      left,
+      right,
+      top,
+      bottom,
     }
+
+    const { name, componentId } = this.props
+    EditorHelper.updateStyle({ name, componentId, value: result })
   }
 
   render() {
@@ -123,68 +114,9 @@ class BorderEditor extends React.Component {
             </Select>
           </Col>
         </Row>
-        <Row
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            paddingBottom: '10px',
-          }}
-        >
-          <Col span={4}>边框颜色</Col>
-          <Col span={16}>
-            <div
-              style={{
-                padding: '5px',
-                background: '#fff',
-                borderRadius: '3px',
-                boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-                display: 'inline-block',
-                cursor: 'pointer',
-                marginLeft: '16px',
-              }}
-            >
-              <div
-                onClick={this.switchShowFlag}
-                style={{
-                  width: '36px',
-                  height: '14px',
-                  borderRadius: '4px',
-                  boxShadow: '0 0 0 0.3px rgba(0,0,0,.1)',
-                  background: color,
-                }}
-              />
-              {this.state.showFlag && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    right: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'white',
-                  }}
-                >
-                  <SketchPicker color={color} onChange={this.handleChangeComplete} />
-                  <div
-                    onClick={this.close}
-                    style={{
-                      alignSelf: 'flex-end',
-                      marginTop: '-30px',
-                      fontSize: '12px',
-                      padding: '5px',
-                      zIndex: 9999,
-                      fontWeight: '500',
-                    }}
-                  >
-                    隐藏
-                  </div>
-                </div>
-              )}
-            </div>
-          </Col>
-        </Row>
+
+        <ColorEditor onChangeComplete={this.handleChangeComplete} title='边框颜色' defaultValue={color} />
+
         <Row style={{ display: 'flex', alignItems: 'center' }}>
           <Col span={4} style={{ alignSelf: 'flex-end' }}>
             边框位置

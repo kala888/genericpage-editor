@@ -1,5 +1,11 @@
 import _ from 'lodash'
 
+function replaceArray(objValue, srcValue) {
+  if (_.isArray(objValue)) {
+    return srcValue
+  }
+}
+
 export default {
   namespace: 'element',
   state: {
@@ -40,9 +46,8 @@ export default {
     saveValue(state, { payload }) {
       const { id } = payload
       console.log('payload......', payload)
-      const item = _.merge(state[id], payload)
+      const item = _.mergeWith(state[id], payload, replaceArray)
       console.log('save props value', item)
-
       return {
         ...state,
         [id]: item,

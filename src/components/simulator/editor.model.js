@@ -21,20 +21,25 @@ function parseAsObj(content, defaultValue) {
 }
 
 const commonPropList = [
-  { id: 'marginTop', title: '上外边距', name: 'marginTop' },
-  { id: 'marginBottom', title: '下外边距', name: 'marginBottom' },
-  { id: 'marginLeft', title: '左外边距', name: 'marginLeft' },
-  { id: 'marginRight', title: '右外边距', name: 'marginRight' },
+  { id: '01', title: '上外边距', name: 'marginTop' },
+  { id: '02', title: '下外边距', name: 'marginBottom' },
+  { id: '03', title: '左外边距', name: 'marginLeft' },
+  { id: '04', title: '右外边距', name: 'marginRight' },
 
-  { id: 'paddingTop', title: '上内边距', name: 'paddingTop' },
-  { id: 'paddingBottom', title: '下内边距', name: 'paddingBottom' },
-  { id: 'paddingLeft', title: '左内边距', name: 'paddingLeft' },
-  { id: 'paddingRight', title: '右内边距', name: 'paddingRight' },
+  { id: '05', title: '上内边距', name: 'paddingTop' },
+  { id: '06', title: '下内边距', name: 'paddingBottom' },
+  { id: '07', title: '左内边距', name: 'paddingLeft' },
+  { id: '08', title: '右内边距', name: 'paddingRight' },
+  { id: '09', title: '背景颜色', name: 'backgroundColor', type: 'color' },
+  { id: '10', title: '不透明度', name: 'opacity', type: 'slider' },
+  { id: '11', title: '圆角', name: 'borderRadius' },
+  { id: '12', title: '高度', name: 'height', defaultValue: 'Auto' },
+  { id: '13', title: '高度', name: 'border', type: 'border' },
+]
 
-  { id: 'opacity', title: '透明度', type: 'slider', name: 'opacity' },
-  { id: 'borderRadius', title: '圆角', name: 'borderRadius' },
-  { id: 'height', title: '高度', name: 'height', defaultValue: 'Auto' },
-  { id: 'border', name: 'border', type: 'border' },
+const commonProperties = [
+  { id: '111', type: 'image', title: '跑马灯图片', name: 'imageList' },
+  { id: '222', type: 'switch', title: '自动播放', name: 'autoPlay' },
 ]
 
 export default {
@@ -61,6 +66,7 @@ export default {
         components[it.componentType] = {
           ...it,
           propList: _.concat(commonPropList, groupedUiProperties[it.id]),
+          properties: _.concat(commonProperties, []),
         }
       })
 
@@ -93,6 +99,7 @@ export default {
         const result = {
           ...comp,
           ...it,
+          styleValues: it.styleValues,
           values: it.values,
         }
         return result
@@ -126,6 +133,7 @@ export default {
           id: comp.id,
           componentType: comp.componentType,
           values: ele.values,
+          styleValues: ele.styleValues,
         }
       })
 
